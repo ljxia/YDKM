@@ -59,12 +59,16 @@ void drawAudioSource(ddf.minim.AudioSource source, int x, int y, int width, int 
   popMatrix();  
 }
 
+void lowPassFilterSliderValue(float sliderValue) {
+  float cutoff = sliderValue;
+  lpf.setFreq(cutoff);
+  lpf.printCoeff();
+}
+
 void mouseMoved()
 {
   // map the mouse position to the range [60, 2000], an arbitrary range of cutoff frequencies
-  float cutoff = map(mouseX, 0, width, 60, 2000);
-  lpf.setFreq(cutoff);
-  lpf.printCoeff();
+  
 } 
 
 void stop()

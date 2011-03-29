@@ -3,9 +3,11 @@ import controlP5.*;
 ControlP5 controlP5;
 controlP5.Toggle buttonPlay;
 controlP5.Toggle buttonRecord;
-
+Slider sliderLowPassFilter;
 Boolean recording = false;
 Boolean playing = false;
+
+int lowPassFilterSliderValue = 100;
 
 void setupControls()
 {
@@ -20,6 +22,9 @@ void setupControls()
   
   buttonRecord = controlP5.addToggle("record",20,20,60,18);
   buttonPlay = controlP5.addToggle("play",100,20,60,18);
+  sliderLowPassFilter = controlP5.addSlider("lowPassFilterSliderValue",60,2000,100,20,200,100,10); 
+  
+  sliderLowPassFilter.setLabel("Low Pass Filter");
 }       
 
 public void controlEvent(ControlEvent theEvent) {
