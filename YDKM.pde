@@ -6,6 +6,7 @@ Minim minim;
 AudioInput in;
 AudioRecorder recorder;
 AudioPlayer player;
+//AudioPlayer playerMod;
 LowPassFS lpf;
 
 void setup()
