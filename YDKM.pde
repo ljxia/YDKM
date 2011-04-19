@@ -6,12 +6,12 @@ Minim minim;
 AudioInput in;
 AudioRecorder recorder;
 AudioPlayer player;
-//AudioPlayer playerMod;
+AudioPlayer playerMod;
 LowPassFS lpf;
 
 void setup()
 {
-  size(800,600);
+  size(1280,900);
   frameRate(30); 
   smooth();
   
@@ -20,6 +20,7 @@ void setup()
   minim = new Minim(this);
   in = minim.getLineIn(Minim.STEREO, 1024);
   recorder = minim.createRecorder(in, "ydkm.wav", true);
+  playerMod = minim.loadFile("ydkm.wav", 1024);
   lpf = new LowPassFS(100, in.sampleRate());
 }            
 
@@ -31,12 +32,18 @@ void draw()
   if (player != null && playing)
   {
      stroke(30);
-     drawAudioSource(player, 20,60, width - 40, 100);
+     drawAudioSource(player, 20,60, width / 2 - 40, 80);
   }
   else
   {
      stroke(255,0,0);
-     drawAudioSource(in, 20,60, width - 40, 100);
+     drawAudioSource(in, 20,60, width / 2 - 40, 80);
+  } 
+  
+  if (playerMod != null)
+  {
+     stroke(30);
+     drawAudioSource(playerMod, 20 + width/2,60, width - 40, 80);
   }
   
 }
@@ -79,6 +86,10 @@ void stop()
   if ( player != null )
   {
     player.close();
+  }
+  if ( playerMod != null )
+  {
+    playerMod.close();
   }
   minim.stop();
   

@@ -2,7 +2,9 @@ import controlP5.*;
 
 ControlP5 controlP5;
 controlP5.Toggle buttonPlay;
-controlP5.Toggle buttonRecord;
+controlP5.Toggle buttonRecord; 
+controlP5.Toggle buttonPlayModified;
+
 Slider sliderLowPassFilter;
 Boolean recording = false;
 Boolean playing = false;
@@ -21,8 +23,9 @@ void setupControls()
   controlP5.setColorLabel(color(30));
   
   buttonRecord = controlP5.addToggle("record",20,20,60,18);
-  buttonPlay = controlP5.addToggle("play",100,20,60,18);
-  sliderLowPassFilter = controlP5.addSlider("lowPassFilterSliderValue",60,2000,100,20,200,100,10); 
+  buttonPlay = controlP5.addToggle("play",20 + 80,20,60,18);
+  buttonPlayModified = controlP5.addToggle("play_modified",20 + width/2,20,60,18);
+  sliderLowPassFilter = controlP5.addSlider("lowPassFilterSliderValue",60,2000,1000,20 + width/2,200,100,10); 
   
   sliderLowPassFilter.setLabel("Low Pass Filter");
 }       
@@ -71,9 +74,26 @@ public void play() {
       buttonPlay.setLabel("Stop");
       playing = true;
       player.loop();
-      player.addEffect(lpf);
+      
       //player.play();
     }    
   }
+}  
 
+public void play_modified() {
+  if (playerMod != null)
+  {
+     if (playerMod.isPlaying())
+     {
+       buttonPlayModified.setLabel("Play");
+       playerMod.pause(); 
+     }
+     else
+     {
+        buttonPlayModified.setLabel("Stop");
+        playerMod.pause();
+        playerMod.loop(); 
+        playerMod.addEffect(lpf);
+      }
+  }
 }
