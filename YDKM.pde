@@ -8,6 +8,7 @@ AudioRecorder recorder;
 AudioPlayer player;
 AudioPlayer playerMod;
 LowPassFS lpf;
+BoneConductedEffect bde;
 
 void setup()
 {
@@ -20,8 +21,10 @@ void setup()
   minim = new Minim(this);
   in = minim.getLineIn(Minim.STEREO, 1024);
   recorder = minim.createRecorder(in, "ydkm.wav", true);
+  player = minim.loadFile("ydkm.wav", 1024);
   playerMod = minim.loadFile("ydkm.wav", 1024);
   lpf = new LowPassFS(100, in.sampleRate());
+  bde = new BoneConductedEffect();
 }            
 
 void draw()
@@ -29,7 +32,7 @@ void draw()
   background(230);
   
   
-  if (player != null && playing)
+  if (player != null && player.isPlaying())
   {
      stroke(30);
      drawAudioSource(player, 20,60, width / 2 - 40, 80);
@@ -94,4 +97,26 @@ void stop()
   minim.stop();
   
   super.stop();
+} 
+
+void keyPressed()
+{
+  if (key == 'p')
+  {
+    if (player != null && playerMod != null)
+    {
+      if (player.isPlaying() && playerMod.isPlaying())
+      {
+        player.pause();
+        playerMod.pause();
+      }
+      else
+      {
+        player.loop();
+        playerMod.loop();
+        playerMod.addEffect(bde);
+      }     
+    }
+
+  }
 }

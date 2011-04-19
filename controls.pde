@@ -47,7 +47,12 @@ public void record() {
     {
         player.close();
     }
+    if ( playerMod != null )
+    {
+        playerMod.close();
+    }
     player = recorder.save();
+    playerMod = minim.loadFile("ydkm.wav", 1024);
   }
   else 
   {
@@ -93,7 +98,9 @@ public void play_modified() {
         buttonPlayModified.setLabel("Stop");
         playerMod.pause();
         playerMod.loop(); 
-        playerMod.addEffect(lpf);
+        //playerMod.addEffect(lpf);
+        playerMod.addEffect(bde);
       }
   }
-}
+}   
+
