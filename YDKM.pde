@@ -1,12 +1,15 @@
 import ddf.minim.*;
 import ddf.minim.effects.*;
+import ddf.minim.analysis.*;
 
 // audio 
 Minim minim;
 AudioInput in;
 AudioRecorder recorder;
 AudioPlayer player;
-AudioPlayer playerMod;
+AudioPlayer playerMod;  
+FFT fft;
+FFT fftMod;
 LowPassFS lpf;
 BoneConductedEffect bde;
 
