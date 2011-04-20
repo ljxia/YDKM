@@ -1,3 +1,5 @@
+import ddf.minim.analysis.*;
+
 class BoneConductedEffect implements AudioEffect
 {
   void process(float[] samp)

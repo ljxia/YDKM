@@ -25,9 +25,9 @@ void setupControls()
   buttonRecord = controlP5.addToggle("record",20,20,60,18);
   buttonPlay = controlP5.addToggle("play",20 + 80,20,60,18);
   buttonPlayModified = controlP5.addToggle("play_modified",20 + width/2,20,60,18);
-  sliderLowPassFilter = controlP5.addSlider("lowPassFilterSliderValue",60,2000,1000,20 + width/2,200,100,10); 
+  //sliderLowPassFilter = controlP5.addSlider("lowPassFilterSliderValue",60,2000,1000,500 + width/2,20,100,10); 
   
-  sliderLowPassFilter.setLabel("Low Pass Filter");
+  //sliderLowPassFilter.setLabel("Low Pass Filter");
 }       
 
 public void controlEvent(ControlEvent theEvent) {
@@ -102,5 +102,38 @@ public void play_modified() {
         playerMod.addEffect(bde);
       }
   }
-}   
+}     
+
+// void lowPassFilterSliderValue(float sliderValue) {
+//   float cutoff = sliderValue;
+//   lpf.setFreq(cutoff);
+//   lpf.printCoeff();
+// } 
+
+void mouseMoved()
+{
+  // map the mouse position to the range [60, 2000], an arbitrary range of cutoff frequencies
+  
+}
+void keyPressed()
+{
+  if (key == 'p')
+  {
+    if (player != null && playerMod != null)
+    {
+      if (player.isPlaying() && playerMod.isPlaying())
+      {
+        player.pause();
+        playerMod.pause();
+      }
+      else
+      {
+        player.loop();
+        playerMod.loop();
+        playerMod.addEffect(bde);
+      }     
+    }
+
+  }
+}
 

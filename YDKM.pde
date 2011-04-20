@@ -27,18 +27,31 @@ void setup()
   player = minim.loadFile("ydkm.wav", 1024);
   playerMod = minim.loadFile("ydkm.wav", 1024);
   lpf = new LowPassFS(100, in.sampleRate());
-  bde = new BoneConductedEffect();
+  bde = new BoneConductedEffect(); 
+  fft = new FFT(player.bufferSize(), player.sampleRate()); 
+  fftMod = new FFT(playerMod.bufferSize(), playerMod.sampleRate());    
+  
+  // fft.logAverages(20,2);
+  // fftMod.logAverages(20,2);  
+  
+  fft.linAverages(20);
+  fftMod.linAverages(20);
 }            
 
 void draw()
 {
   background(230);
   
+    
   
   if (player != null && player.isPlaying())
   {
      stroke(30);
      drawAudioSource(player, 20,60, width / 2 - 40, 80);
+     
+     
+     fft.forward(player.mix); 
+     drawFFT(fft,      20,           260, width / 2 - 40, 80);
   }
   else
   {
@@ -46,11 +59,34 @@ void draw()
      drawAudioSource(in, 20,60, width / 2 - 40, 80);
   } 
   
-  if (playerMod != null)
+  if (playerMod != null && playerMod.isPlaying())
   {
      stroke(30);
-     drawAudioSource(playerMod, 20 + width/2,60, width - 40, 80);
-  }
+     drawAudioSource(playerMod, 20 + width/2,60, width / 2 - 40, 80);
+     
+     fftMod.forward(playerMod.mix); 
+     
+     
+     
+     
+     fftMod.scaleBand(0,0.0);
+     fftMod.scaleBand(1,0.0);
+     fftMod.scaleBand(2,0.0);
+     // fftMod.scaleBand(5,0.01);
+     // fftMod.scaleBand(6,0.01);
+     // fftMod.scaleBand(7,0.01);
+     // fftMod.scaleBand(8,0.01);
+     // fftMod.scaleBand(9,0.01);
+     // fftMod.scaleBand(10,0.01);
+     // fftMod.scaleBand(11,0.01);
+     // fftMod.scaleBand(12,0.01);
+     // fftMod.scaleBand(13,0.01);  
+     fftMod.inverse(playerMod.left);
+     fftMod.inverse(playerMod.right);
+     fftMod.inverse(playerMod.mix);
+     
+     drawFFT(fftMod,   20 + width/2, 260, width / 2 - 40, 80);
+  } 
   
 }
 
@@ -71,19 +107,27 @@ void drawAudioSource(ddf.minim.AudioSource source, int x, int y, int width, int 
           qHeight * 3 + source.right.get(i+1)*qHeight);
   }
   popMatrix();  
-}
-
-void lowPassFilterSliderValue(float sliderValue) {
-  float cutoff = sliderValue;
-  lpf.setFreq(cutoff);
-  lpf.printCoeff();
-}
-
-void mouseMoved()
-{
-  // map the mouse position to the range [60, 2000], an arbitrary range of cutoff frequencies
-  
 } 
+
+void drawFFT(FFT thisfft, int x, int y, int width, int height)
+{     
+  pushMatrix();
+  translate(x,y);
+  float bandwidth = width/thisfft.avgSize();
+  for(int i = 0; i < thisfft.avgSize(); i++)
+  {
+    // draw the line for frequency band i, scaling it by 4 so we can see it a bit better
+    noStroke();
+    fill(30,255);
+    rect(map(i,0,thisfft.avgSize(),0,width), height - thisfft.getAvg(i)*4, bandwidth, thisfft.getAvg(i)*4);
+    
+    //println(thisfft.getBand(i)*400000);
+  }   
+  
+  popMatrix();
+}
+
+
 
 void stop()
 {
@@ -101,25 +145,3 @@ void stop()
   
   super.stop();
 } 
-
-void keyPressed()
-{
-  if (key == 'p')
-  {
-    if (player != null && playerMod != null)
-    {
-      if (player.isPlaying() && playerMod.isPlaying())
-      {
-        player.pause();
-        playerMod.pause();
-      }
-      else
-      {
-        player.loop();
-        playerMod.loop();
-        playerMod.addEffect(bde);
-      }     
-    }
-
-  }
-}
