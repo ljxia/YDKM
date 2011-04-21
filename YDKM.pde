@@ -12,6 +12,7 @@ FFT fft;
 FFT fftMod;
 LowPassFS lpf;
 BoneConductedEffect bde;
+int BAND_NUM = 30;
 
 void setup()
 {
@@ -27,15 +28,15 @@ void setup()
   player = minim.loadFile("ydkm.wav", 1024);
   playerMod = minim.loadFile("ydkm.wav", 1024);
   lpf = new LowPassFS(100, in.sampleRate());
-  bde = new BoneConductedEffect(); 
+  bde = new BoneConductedEffect(player.bufferSize(), player.sampleRate()); 
   fft = new FFT(player.bufferSize(), player.sampleRate()); 
   fftMod = new FFT(playerMod.bufferSize(), playerMod.sampleRate());    
   
   // fft.logAverages(20,2);
   // fftMod.logAverages(20,2);  
   
-  fft.linAverages(20);
-  fftMod.linAverages(20);
+  fft.linAverages(BAND_NUM);
+  fftMod.linAverages(BAND_NUM);
 }            
 
 void draw()

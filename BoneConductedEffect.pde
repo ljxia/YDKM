@@ -2,24 +2,47 @@ import ddf.minim.analysis.*;
 
 class BoneConductedEffect implements AudioEffect
 {
-  void process(float[] samp)
+  private FFT fft;
+  private float bandScale[];
+
+  public BoneConductedEffect(int bufferSize, float sampleRate)
   {
-    // float[] reversed = new float[samp.length];
-    // int i = samp.length - 1;
-    // for (int j = 0; j < reversed.length; i--, j++)
-    // {
-    //   reversed[j] = samp[i];
-    // }
-    // // we have to copy the values back into samp for this to work
-    // arraycopy(reversed, samp);  
-    
-    for (int i = 0; i < samp.length; i++)
+    this.fft = new FFT(bufferSize, sampleRate);
+    this.fft.linAverages(BAND_NUM);  
+    this.bandScale = new float[BAND_NUM];
+    for (int i = 0; i< BAND_NUM ; i++) 
     {
-      samp[i] = samp[i] / 4;
-    }     
-    
-  }
+      this.bandScale[i] = 1;
+    }
+  } 
   
+  public void setBandScale(int band, float scale)
+  {
+    if (band < this.bandScale.length && band >= 0)
+    {
+      this.bandScale[band] = scale;
+    }
+  }
+
+  void process(float[] samp)
+  {                   
+
+    float[] mod = new float[samp.length];
+    arraycopy(samp, mod);       
+
+    this.fft.forward(mod);
+
+    for (int i = 0; i < this.fft.avgSize(); i++) 
+    {
+      this.fft.scaleBand(i,this.bandScale[i]);
+    }
+    
+    this.fft.inverse(mod);
+
+    arraycopy(mod, samp);
+
+  }
+
   void process(float[] left, float[] right)
   {
     process(left);

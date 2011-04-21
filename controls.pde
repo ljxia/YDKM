@@ -27,12 +27,15 @@ void setupControls()
   buttonPlayModified = controlP5.addToggle("play_modified",20 + width/2,20,60,18);
   //sliderLowPassFilter = controlP5.addSlider("lowPassFilterSliderValue",60,2000,1000,500 + width/2,20,100,10); 
   
+  
+  controlP5.addToggle("muteNormal",false,20 + 80 + 80,20,18,18);
+  controlP5.addToggle("muteMod",false,width/2 + 20 + 80,20,18,18);
+  
   //sliderLowPassFilter.setLabel("Low Pass Filter");
+  for (int i = 0; i < BAND_NUM; i++) {
+    controlP5.addSlider("EQ" + i,0,7,1, width/2 + 20 + i * (width/2 - 40) / BAND_NUM,400,15,200).setId(100 + i);
+  }
 }       
-
-public void controlEvent(ControlEvent theEvent) {
-  //println(theEvent.controller().name()); 
-}
 
 public void record() { 
   println("Record");
@@ -102,13 +105,53 @@ public void play_modified() {
         playerMod.addEffect(bde);
       }
   }
-}     
+}  
+
+public void muteNormal()
+{
+  if (player != null)
+  {
+    if (player.isMuted())
+    {
+      player.unmute();
+    }                 
+    else
+    {
+      player.mute();
+    }
+  }
+}
+
+public void muteMod()
+{
+  if (playerMod != null)
+  {
+    if (playerMod.isMuted())
+    {
+      playerMod.unmute();
+    }                 
+    else
+    {
+      playerMod.mute();
+    }
+  }
+}   
 
 // void lowPassFilterSliderValue(float sliderValue) {
 //   float cutoff = sliderValue;
 //   lpf.setFreq(cutoff);
 //   lpf.printCoeff();
-// } 
+// }  
+
+void controlEvent(ControlEvent theEvent) {
+  //println(theEvent.controller().id());
+  
+  if (theEvent.controller().id() >= 100 && theEvent.controller().id() < 200)
+  {
+    bde.setBandScale(theEvent.controller().id() - 100, theEvent.controller().value());
+  }
+  
+}
 
 void mouseMoved()
 {
@@ -117,7 +160,7 @@ void mouseMoved()
 }
 void keyPressed()
 {
-  if (key == 'p')
+  if (key == ' ')
   {
     if (player != null && playerMod != null)
     {
@@ -133,7 +176,26 @@ void keyPressed()
         playerMod.addEffect(bde);
       }     
     }
-
+  }
+  
+  else if (key == 't')
+  {
+    if (player != null && playerMod != null)
+    {
+      if (player.isPlaying() && playerMod.isPlaying())
+      {
+        if (player.isMuted())
+        {
+          player.unmute();
+          playerMod.mute();
+        }
+        else
+        {
+          player.mute();
+          playerMod.unmute();
+        }
+      }     
+    }    
   }
 }
 
