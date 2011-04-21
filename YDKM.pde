@@ -25,8 +25,9 @@ void setup()
   minim = new Minim(this);
   in = minim.getLineIn(Minim.STEREO, 1024);
   recorder = minim.createRecorder(in, "ydkm.wav", true);
-  player = minim.loadFile("ydkm.wav", 1024);
-  playerMod = minim.loadFile("ydkm.wav", 1024);
+  String filename = "groove.mp3";//"ydkm.wav"
+  player = minim.loadFile(filename, 1024);
+  playerMod = minim.loadFile(filename, 1024);
   lpf = new LowPassFS(100, in.sampleRate());
   bde = new BoneConductedEffect(player.bufferSize(), player.sampleRate()); 
   fft = new FFT(player.bufferSize(), player.sampleRate()); 
@@ -66,25 +67,6 @@ void draw()
      drawAudioSource(playerMod, 20 + width/2,60, width / 2 - 40, 80);
      
      fftMod.forward(playerMod.mix); 
-     
-     
-     
-     
-     fftMod.scaleBand(0,0.0);
-     fftMod.scaleBand(1,0.0);
-     fftMod.scaleBand(2,0.0);
-     // fftMod.scaleBand(5,0.01);
-     // fftMod.scaleBand(6,0.01);
-     // fftMod.scaleBand(7,0.01);
-     // fftMod.scaleBand(8,0.01);
-     // fftMod.scaleBand(9,0.01);
-     // fftMod.scaleBand(10,0.01);
-     // fftMod.scaleBand(11,0.01);
-     // fftMod.scaleBand(12,0.01);
-     // fftMod.scaleBand(13,0.01);  
-     fftMod.inverse(playerMod.left);
-     fftMod.inverse(playerMod.right);
-     fftMod.inverse(playerMod.mix);
      
      drawFFT(fftMod,   20 + width/2, 260, width / 2 - 40, 80);
   } 
