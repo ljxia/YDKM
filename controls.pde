@@ -16,7 +16,7 @@ void setupControls()
   controlP5 = new ControlP5(this);
   //controlP5.setAutoInitialization(true);
   
-  controlP5.setAutoDraw(true);
+  controlP5.setAutoDraw(false);
   controlP5.setColorActive(color(255,50,50));
   controlP5.setColorBackground(color(200));
   controlP5.setColorForeground(color(255,180,180));
@@ -33,7 +33,7 @@ void setupControls()
   
   //sliderLowPassFilter.setLabel("Low Pass Filter");
   for (int i = 0; i < BAND_NUM; i++) {
-    controlP5.addSlider("EQ" + i,0,7,1, width/2 + 20 + i * (width/2 - 40) / BAND_NUM,400,15,200).setId(100 + i);
+    controlP5.addSlider("EQ" + i,0,7,1, 20 + i * (width - 40) / BAND_NUM,400,15,200).setId(100 + i);
   }
 }       
 
