@@ -1,3 +1,4 @@
+import processing.opengl.*;
 //audio
 import ddf.minim.*;
 import ddf.minim.effects.*;
@@ -19,13 +20,15 @@ BoneConductedEffect bde;
 int BAND_NUM = 80;
 
 VerletPhysics2D physics;
-VerletParticle2D origin;
+ArrayList<WaveThread2D> wavethreads;
+
+/*VerletParticle2D origin;
 VerletParticle2D comet;
 Vec2D lastComet;
 VerletParticle2D attractor;
 VerletSpring2D attractorSpring;
 ArrayList<VerletParticle2D> chain;
-ArrayList<Vec2D> trail;
+ArrayList<Vec2D> trail;    */
 
 void setup()
 {
@@ -36,7 +39,31 @@ void setup()
   physics = new VerletPhysics2D(null,50, 0, 1);
   physics.setGravity(new Vec2D(0,0));
   physics.setWorldBounds(new Rect(0,0,width,height));
-  origin = new VerletParticle2D(width/2,height-300);
+  
+  wavethreads = new ArrayList<WaveThread2D>();
+  
+  for (int i = 0; i<20; i++){
+    wavethreads.add(new WaveThread2D(physics, 20, new VerletParticle2D(width/2,height-400), 1.01));  // + (i - 3) * 100
+  } 
+  
+  //wavethreads.get(0).updateInterval = 5;
+  /*wavethreads.get(1).updateInterval = 20;
+  wavethreads.get(2).updateInterval = 30;
+  wavethreads.get(3).updateInterval = 40;
+  wavethreads.get(4).updateInterval = 50;
+  wavethreads.get(4).updateInterval = 50;
+  
+  physics.addSpring(new VerletSpring2D(wavethreads.get(0).comet,  wavethreads.get(1).chain.get(wavethreads.get(1).length - 1), 60, 0.01));
+  physics.addSpring(new VerletSpring2D(wavethreads.get(1).comet,  wavethreads.get(2).chain.get(wavethreads.get(2).length - 1), 60, 0.01));
+  physics.addSpring(new VerletSpring2D(wavethreads.get(2).comet,  wavethreads.get(3).chain.get(wavethreads.get(3).length - 1), 60, 0.01));
+  physics.addSpring(new VerletSpring2D(wavethreads.get(3).comet,  wavethreads.get(4).chain.get(wavethreads.get(4).length - 1), 60, 0.01));
+  physics.addSpring(new VerletSpring2D(wavethreads.get(4).comet,  wavethreads.get(5).chain.get(wavethreads.get(5).length - 1), 60, 0.01)); */
+                        
+                                        
+  
+  //wavethreads.get(5).updateInterval = 60;
+  
+  /*origin = new VerletParticle2D(width/2,height-300);
   attractor = new VerletParticle2D(width/2,height-300);
   comet = new VerletParticle2D(width/2,height - 300- 100);
   physics.addParticle(origin);
@@ -66,7 +93,7 @@ void setup()
     physics.addSpring(new VerletSpring2D(attractor,node,60,0.0002));
   }
   
-  physics.addSpring(new VerletSpring2D(comet,node,30,0.0005));
+  physics.addSpring(new VerletSpring2D(comet,node,30,0.0005));   */
   
   setupControls();
   
@@ -86,10 +113,21 @@ void setup()
   
   fft.linAverages(BAND_NUM);
   fftMod.linAverages(BAND_NUM);
+}
+
+void update()
+{
+  physics.update(); 
+  for (int i = 0; i<wavethreads.size(); i++){
+    wavethreads.get(i).update();
+  }
 }            
 
 void draw()
 {
+  update();
+  
+  
   background(230);
   /*noStroke();
   fill(255,50);
@@ -97,7 +135,7 @@ void draw()
   
   controlP5.draw(); 
   
-  if (chain != null && chain.size() > 2)
+  /*if (chain != null && chain.size() > 2)
   {
     if (trail.size() == 0 || trail.get(trail.size() - 1).distanceTo(attractor) > 2)
     {
@@ -109,54 +147,9 @@ void draw()
       trail.remove(0);
     }
     //println(.x + ", " + trail.get(trail.size() - 1).y);    
-  }
+  }  */
 
   //println(trail.size());
-  
-  
-  //update physics
-  if (frameCount % 5 == 0)//(mousePressed)//
-  {
-    attractor.set(origin.add(comet.sub(origin).normalize().rotate(PI/random(0.1,3.8)).scale(noise(frameCount) * 70 + 15)));  
-    attractor.lock();
-    attractorSpring.setStrength(noise(frameCount) * 3 + 0.5);   
-  }
-  
-  /*if (frameCount % 30 == 0)
-  {
-    for (int i = 1; i<=3; i++){
-      VerletParticle2D middle = chain.get(i * int((chain.size() - 1) / 3));
-      if (middle.isLocked())
-      {
-        middle.unlock();
-      }                 
-      else
-      {
-        middle.lock();
-      }                    
-    }
-  }*/
-  
-  
-  /*if (frameCount % 150 == 0)//(mousePressed)//
-  {
-    //origin.set(chain.get(int(random(chain.size() - 1))));
-    origin.lock();  
-  }
-  else if (frameCount % 15 == 0)//(mousePressed)//
-  {
-    //origin.set(chain.get(int(random(chain.size() - 1))));
-    origin.unlock();  
-  }*/
-
-  physics.update(); 
-  if (lastComet != null)
-  {    
-    chain.get(1).set(lastComet);
-  }
-  lastComet = comet.copy();
-  
-
   
   if (player != null && player.isPlaying())
   {
@@ -183,91 +176,9 @@ void draw()
      drawFFT(fftMod,   20 + width/2, 260, width / 2 - 40, 80);
   }
 
-  stroke(170);
-  noFill();
-  //line(origin.x ,origin.y,comet.x ,comet.y);
-  
-  stroke(170);
-  noFill();
-  //line(attractor.x ,attractor.y,comet.x ,comet.y);
-  
-  noStroke();                                  
-  fill(0);
-  //ellipse(origin.x ,origin.y,3,3);
-  
-  fill(255,0,0);
-  //ellipse(comet.x ,comet.y,3,3); 
-  
-  fill(0,0,255);
-  //ellipse(attractor.x ,attractor.y,3,3);
-  
-  pushMatrix();
-  translate(origin.x,origin.y);
-  //scale(3);
-  int rep = 1;
-  for (int j = 0; j < rep; j++){
-
-    fill(100, 30);
-
-    beginShape();  
-    //curveVertex(chain.get(1).x - origin.x ,chain.get(1).y - origin.y);
-    for (int i = 1; i<chain.size(); i++){
-      
-      stroke(100, 180);
-      //noStroke();
-      //line(chain.get(i).x,chain.get(i).y,chain.get(i-1).x,chain.get(i-1).y);
-      curveVertex(chain.get(i).x - origin.x ,chain.get(i).y - origin.y);
-      
-    } 
-    //curveVertex(chain.get(0).x - origin.x,chain.get(0).y - origin.y);
-    
-    curveVertex(chain.get(1).x - origin.x ,chain.get(1).y - origin.y);
-    
-    endShape();
-
-
-    rotate(PI/20);
-
-    beginShape();
-    //curveVertex(chain.get(1).x - origin.x ,chain.get(1).y - origin.y);
-    //curveVertex(chain.get(0).x - origin.x,chain.get(0).y - origin.y);
-    //curveVertex(chain.get(0).x - origin.x,chain.get(0).y - origin.y);
-    fill(255,0,0, 30);
-    for (int i = 1; i<chain.size(); i++){
-      stroke(255,0,0, 180);
-      //noStroke();
-      
-      //line(chain.get(i).x,chain.get(i).y,chain.get(i-1).x,chain.get(i-1).y);
-      curveVertex(chain.get(i).x - origin.x ,chain.get(i).y - origin.y);
-      /*noStroke(); 
-      fill(255,255,0);
-      ellipse(chain.get(i).x,chain.get(i).y,2,2); */ 
-    }
-    curveVertex(chain.get(1).x - origin.x ,chain.get(1).y - origin.y);
-    endShape();                                      
-    
-    rotate(-PI/20); 
-    
-
-    
-    
-    rotate(TWO_PI/rep);
-    
-  }           
-  
-  
-  popMatrix();          
-  
-  stroke(255,100,0, 180);
-  //fill(255,100,0, 130); 
-  noFill();
-  beginShape();
-  for (int i = 1; i<trail.size(); i++){
-    //line(trail.get(i).x,trail.get(i).y,trail.get(i-1).x,trail.get(i-1).y);
-    //ellipse(trail.get(i).x,trail.get(i).y,5,5);
-    curveVertex(trail.get(i).x,trail.get(i).y);
+  for (int i = 0; i<wavethreads.size(); i++){
+    wavethreads.get(i).draw();
   }
-  endShape();
 }
 
 void drawAudioSource(ddf.minim.AudioSource source, int x, int y, int width, int height)

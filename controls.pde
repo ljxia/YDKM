@@ -157,7 +157,17 @@ void mouseMoved()
 {
   // map the mouse position to the range [60, 2000], an arbitrary range of cutoff frequencies
   
+} 
+
+void mouseDragged()
+{
+  if (wavethreads.size() > 0)
+  {
+    wavethreads.get(0).origin.set(new Vec2D(mouseX, mouseY));
+    
+  }
 }
+
 void keyPressed()
 {
   if (key == ' ')
