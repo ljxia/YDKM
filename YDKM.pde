@@ -23,13 +23,8 @@ VerletPhysics2D physics;
 ArrayList<WaveThread2D> wavethreads;
 ArrayList<WaveThread2D> corethreads;
 
-/*VerletParticle2D origin;
-VerletParticle2D comet;
-Vec2D lastComet;
-VerletParticle2D attractor;
-VerletSpring2D attractorSpring;
-ArrayList<VerletParticle2D> chain;
-ArrayList<Vec2D> trail;    */
+String setting;
+
 
 void setup()
 {
@@ -39,6 +34,7 @@ void setup()
   
   frameRate(30); 
   smooth(); 
+  setting = "";
   
   physics = new VerletPhysics2D(null,50, 0, 1);
   physics.setGravity(new Vec2D(0,0));
@@ -74,11 +70,13 @@ void setup()
 
 void update()
 {
+  //println(in.left.level());
   physics.update(); 
   for (int i = 0; i<wavethreads.size(); i++){
     wavethreads.get(i).update();
   }
   for (int i = 0; i<corethreads.size(); i++){
+    corethreads.get(i).shapeInterpolator.set(player.left.level() * 20 + 1);
     corethreads.get(i).update();
   }
 }            
@@ -95,21 +93,6 @@ void draw()
   
   controlP5.draw(); 
   
-  /*if (chain != null && chain.size() > 2)
-  {
-    if (trail.size() == 0 || trail.get(trail.size() - 1).distanceTo(attractor) > 2)
-    {
-      trail.add(attractor.copy());
-    }
-    
-    if (trail.size() > 50)
-    {
-      trail.remove(0);
-    }
-    //println(.x + ", " + trail.get(trail.size() - 1).y);    
-  }  */
-
-  //println(trail.size());
   
   if (player != null && player.isPlaying())
   {
@@ -117,8 +100,11 @@ void draw()
      drawAudioSource(player, 20,60, width / 2 - 40, 80);
      
      
-     fft.forward(player.mix); 
-     drawFFT(fft,      20,           260, width / 2 - 40, 80);
+     fft.forward(player.mix);
+     
+     noStroke();
+     fill(0,0,220,130); 
+     drawFFT(fft,      20, 260, width - 40, 80);
   }
   else
   {
@@ -131,9 +117,12 @@ void draw()
      stroke(30);
      drawAudioSource(playerMod, 20 + width/2,60, width / 2 - 40, 80);
      
-     fftMod.forward(playerMod.mix); 
+     fftMod.forward(playerMod.mix);
      
-     drawFFT(fftMod,   20 + width/2, 260, width / 2 - 40, 80);
+     noStroke();
+     fill(220,0,0,150); 
+     
+     drawFFT(fftMod,   20, 260, width - 40, 80);
   }
 
   for (int i = 0; i<wavethreads.size(); i++){
@@ -171,8 +160,7 @@ void drawFFT(FFT thisfft, int x, int y, int width, int height)
   for(int i = 0; i < thisfft.avgSize(); i++)
   {
     // draw the line for frequency band i, scaling it by 4 so we can see it a bit better
-    noStroke();
-    fill(30,255);
+    
     rect(map(i,0,thisfft.avgSize(),0,width), height - thisfft.getAvg(i)*4, bandwidth, thisfft.getAvg(i)*4);
     
     //println(thisfft.getBand(i)*400000);

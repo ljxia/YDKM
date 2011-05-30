@@ -40,12 +40,42 @@ class BoneConductedEffect implements AudioEffect
     this.fft.inverse(mod);
 
     arraycopy(mod, samp);
-
   }
 
   void process(float[] left, float[] right)
   {
     process(left);
     process(right);
+  }                      
+  
+  String toString()
+  {
+    String output = "";
+    for (int i = 0; i<bandScale.length; i++){
+      if (i > 0)
+      {
+        output += ",";
+      }               
+      output += nf(bandScale[i],1,4);
+    }
+    return output;
+  } 
+  
+  void fromString(String data)
+  {
+    String []pieces = split(data, ",");
+    if (pieces.length >= bandScale.length)
+    {
+      for (int i = 0; i<pieces.length; i++){
+        bandScale[i] = float(pieces[i]);
+      }
+    }
+  }
+  
+  void updateController(ControlP5 c)
+  {
+    for (int i = 0; i<bandScale.length; i++){
+      c.controller("EQ" + i).setValue(bandScale[i]);
+    }    
   }
 }

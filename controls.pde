@@ -221,5 +221,15 @@ void keyPressed()
       wavethreads.get(i).shapeInterpolator.set(wavethreads.get(i).shapeInterpolator.get() *2);
     }
   }
+  
+  else if (key == 's')
+  {
+    setting = bde.toString();
+  }
+  else if (key == 'l')
+  {
+    bde.fromString(setting);
+    bde.updateController(controlP5);
+  }
 }
 
