@@ -21,6 +21,7 @@ int BAND_NUM = 80;
 
 VerletPhysics2D physics;
 ArrayList<WaveThread2D> wavethreads;
+ArrayList<WaveThread2D> corethreads;
 
 /*VerletParticle2D origin;
 VerletParticle2D comet;
@@ -32,7 +33,10 @@ ArrayList<Vec2D> trail;    */
 
 void setup()
 {
-  size(1920,1080);
+  size(1920,1080, OPENGL);
+  hint(DISABLE_OPENGL_2X_SMOOTH);
+  hint(ENABLE_OPENGL_4X_SMOOTH);
+  
   frameRate(30); 
   smooth(); 
   
@@ -41,59 +45,12 @@ void setup()
   physics.setWorldBounds(new Rect(0,0,width,height));
   
   wavethreads = new ArrayList<WaveThread2D>();
+  corethreads = new ArrayList<WaveThread2D>();
   
   for (int i = 0; i<20; i++){
-    wavethreads.add(new WaveThread2D(physics, 20, new VerletParticle2D(width/2,height-400), 1.01));  // + (i - 3) * 100
+    wavethreads.add(new WaveThread2D(physics, 15, new VerletParticle2D(width/2,height-400), 0.4));  // + (i - 3) * 100  
+    corethreads.add(new WaveThread2D(physics, 20, new VerletParticle2D(width/2,height-400), 0.99));
   } 
-  
-  //wavethreads.get(0).updateInterval = 5;
-  /*wavethreads.get(1).updateInterval = 20;
-  wavethreads.get(2).updateInterval = 30;
-  wavethreads.get(3).updateInterval = 40;
-  wavethreads.get(4).updateInterval = 50;
-  wavethreads.get(4).updateInterval = 50;
-  
-  physics.addSpring(new VerletSpring2D(wavethreads.get(0).comet,  wavethreads.get(1).chain.get(wavethreads.get(1).length - 1), 60, 0.01));
-  physics.addSpring(new VerletSpring2D(wavethreads.get(1).comet,  wavethreads.get(2).chain.get(wavethreads.get(2).length - 1), 60, 0.01));
-  physics.addSpring(new VerletSpring2D(wavethreads.get(2).comet,  wavethreads.get(3).chain.get(wavethreads.get(3).length - 1), 60, 0.01));
-  physics.addSpring(new VerletSpring2D(wavethreads.get(3).comet,  wavethreads.get(4).chain.get(wavethreads.get(4).length - 1), 60, 0.01));
-  physics.addSpring(new VerletSpring2D(wavethreads.get(4).comet,  wavethreads.get(5).chain.get(wavethreads.get(5).length - 1), 60, 0.01)); */
-                        
-                                        
-  
-  //wavethreads.get(5).updateInterval = 60;
-  
-  /*origin = new VerletParticle2D(width/2,height-300);
-  attractor = new VerletParticle2D(width/2,height-300);
-  comet = new VerletParticle2D(width/2,height - 300- 100);
-  physics.addParticle(origin);
-  physics.addParticle(comet);
-  physics.addParticle(attractor);
-  origin.lock();
-  
-  attractorSpring = new VerletSpring2D(attractor,comet,3,2);
-  physics.addSpring(new VerletSpring2D(origin,comet,15,0.02));
-  physics.addSpring(attractorSpring);
-  
-  trail = new ArrayList<Vec2D>();
-  
-  int chainlength = 50;
-  chain = new ArrayList<VerletParticle2D>();
-  chain.add(comet);
-  VerletParticle2D node = null;
-  
-  
-  for (int i = 0; i<chainlength; i++){
-    node = new VerletParticle2D(comet);
-    physics.addSpring(new VerletSpring2D(node,chain.get(chain.size() - 1),0.5, 0.07 * (0.1)));       // - i * 0.00005
-    physics.addParticle(node);
-    chain.add(node);          
-    
-    physics.addSpring(new VerletSpring2D(origin,node,60,0.0002));
-    physics.addSpring(new VerletSpring2D(attractor,node,60,0.0002));
-  }
-  
-  physics.addSpring(new VerletSpring2D(comet,node,30,0.0005));   */
   
   setupControls();
   
@@ -120,6 +77,9 @@ void update()
   physics.update(); 
   for (int i = 0; i<wavethreads.size(); i++){
     wavethreads.get(i).update();
+  }
+  for (int i = 0; i<corethreads.size(); i++){
+    corethreads.get(i).update();
   }
 }            
 
@@ -177,7 +137,10 @@ void draw()
   }
 
   for (int i = 0; i<wavethreads.size(); i++){
-    wavethreads.get(i).draw();
+    //wavethreads.get(i).draw();
+  }
+  for (int i = 0; i<corethreads.size(); i++){
+    corethreads.get(i).draw();
   }
 }
 

@@ -161,11 +161,11 @@ void mouseMoved()
 
 void mouseDragged()
 {
-  if (wavethreads.size() > 0)
+  /*if (wavethreads.size() > 0)
   {
     wavethreads.get(0).origin.set(new Vec2D(mouseX, mouseY));
     
-  }
+  }*/
 }
 
 void keyPressed()
@@ -206,6 +206,20 @@ void keyPressed()
         }
       }     
     }    
+  }
+  
+  else if (key == '[')
+  {
+    for (int i = 0; i<wavethreads.size(); i++){
+      wavethreads.get(i).shapeInterpolator.set(wavethreads.get(i).shapeInterpolator.get() *0.5);
+    }
+  }
+  
+  else if (key == ']')
+  {
+    for (int i = 0; i<wavethreads.size(); i++){
+      wavethreads.get(i).shapeInterpolator.set(wavethreads.get(i).shapeInterpolator.get() *2);
+    }
   }
 }
 
