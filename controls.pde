@@ -37,104 +37,26 @@ void setupControls()
   }
 }       
 
-public void record() { 
-  println("Record");
-  
-  if ( recorder.isRecording() ) 
-  {
-    recorder.endRecord();
-    buttonRecord.setLabel("Record");
-    recording = false;
-    
-    if ( player != null )
-    {
-        player.close();
-    }
-    if ( playerMod != null )
-    {
-        playerMod.close();
-    }
-    player = recorder.save();
-    playerMod = minim.loadFile("ydkm.wav", 1024);
-  }
-  else 
-  {
-    recorder = minim.createRecorder(in, "ydkm.wav", true);
-    recorder.beginRecord();
-    buttonRecord.setLabel("Stop");
-    recording = true;
-  }  
+public void record() {
+  recordScreen.record();   
 }
 
 public void play() {
-  println("Play");
-  if ( player != null )
-  {
-    if (playing)
-    {
-       buttonPlay.setLabel("Play");
-       playing = false; 
-
-       player.pause();
-    }
-    else
-    {
-      buttonPlay.setLabel("Stop");
-      playing = true;
-      player.loop();
-      
-      //player.play();
-    }    
-  }
+  recordScreen.play();
 }  
 
 public void play_modified() {
-  if (playerMod != null)
-  {
-     if (playerMod.isPlaying())
-     {
-       buttonPlayModified.setLabel("Play");
-       playerMod.pause(); 
-     }
-     else
-     {
-        buttonPlayModified.setLabel("Stop");
-        playerMod.pause();
-        playerMod.loop(); 
-        //playerMod.addEffect(lpf);
-        playerMod.addEffect(bde);
-      }
-  }
+  recordScreen.play_modified();
 }  
 
 public void muteNormal()
 {
-  if (player != null)
-  {
-    if (player.isMuted())
-    {
-      player.unmute();
-    }                 
-    else
-    {
-      player.mute();
-    }
-  }
+  recordScreen.muteNormal();
 }
 
 public void muteMod()
 {
-  if (playerMod != null)
-  {
-    if (playerMod.isMuted())
-    {
-      playerMod.unmute();
-    }                 
-    else
-    {
-      playerMod.mute();
-    }
-  }
+  recordScreen.muteMod();
 }   
 
 // void lowPassFilterSliderValue(float sliderValue) {
@@ -148,7 +70,7 @@ void controlEvent(ControlEvent theEvent) {
   
   if (theEvent.controller().id() >= 100 && theEvent.controller().id() < 200)
   {
-    bde.setBandScale(theEvent.controller().id() - 100, theEvent.controller().value());
+    recordScreen.bde.setBandScale(theEvent.controller().id() - 100, theEvent.controller().value());
   }
   
 }
@@ -172,64 +94,36 @@ void keyPressed()
 {
   if (key == ' ')
   {
-    if (player != null && playerMod != null)
-    {
-      if (player.isPlaying() && playerMod.isPlaying())
-      {
-        player.pause();
-        playerMod.pause();
-      }
-      else
-      {
-        player.loop();
-        playerMod.loop();
-        playerMod.addEffect(bde);
-      }     
-    }
+    recordScreen.toggleAll();
   }
   
   else if (key == 't')
   {
-    if (player != null && playerMod != null)
-    {
-      if (player.isPlaying() && playerMod.isPlaying())
-      {
-        if (player.isMuted())
-        {
-          player.unmute();
-          playerMod.mute();
-        }
-        else
-        {
-          player.mute();
-          playerMod.unmute();
-        }
-      }     
-    }    
+    recordScreen.toggleChannel();    
   }
   
   else if (key == '[')
   {
-    for (int i = 0; i<wavethreads.size(); i++){
+    /*for (int i = 0; i<wavethreads.size(); i++){
       wavethreads.get(i).shapeInterpolator.set(wavethreads.get(i).shapeInterpolator.get() *0.5);
-    }
+    } */
   }
   
   else if (key == ']')
   {
-    for (int i = 0; i<wavethreads.size(); i++){
+    /*for (int i = 0; i<wavethreads.size(); i++){
       wavethreads.get(i).shapeInterpolator.set(wavethreads.get(i).shapeInterpolator.get() *2);
-    }
+    }*/
   }
   
   else if (key == 's')
   {
-    setting = bde.toString();
+    setting = recordScreen.bde.toString();
   }
   else if (key == 'l')
   {
-    bde.fromString(setting);
-    bde.updateController(controlP5);
+    recordScreen.bde.fromString(setting);
+    recordScreen.bde.updateController(controlP5);
   }
 }
 
