@@ -40,27 +40,45 @@ class RecordScreen extends Screen
     physics.setGravity(new Vec2D(0,0));
     physics.setWorldBounds(new Rect(0,0,width,height));
 
-    threads = new WaveThreadCollection(physics, 20, new VerletParticle2D(width * 3/4,height/2), 0.99);
+    threads = new WaveThreadCollection(physics, new Vec2D(width * 3/4,height/2));
   }
   
   void setupAudio()
   {
     minim = new Minim(this.applet);
     in = minim.getLineIn(Minim.STEREO, 1024);
-    recorder = minim.createRecorder(in, "ydkm.wav", true);
-    String filename = "ydkm.wav";//"ydkm.wav"
-    player = minim.loadFile(filename, 1024);
-    playerMod = minim.loadFile(filename, 1024);
-    //lpf = new LowPassFS(100, in.sampleRate());
-    bde = new BoneConductedEffect(player.bufferSize(), player.sampleRate()); 
-    fft = new FFT(player.bufferSize(), player.sampleRate()); 
-    fftMod = new FFT(playerMod.bufferSize(), playerMod.sampleRate());    
+    
+    String filename = this.username + ".wav";//"ydkm.wav"
+    recorder = minim.createRecorder(in, filename, true);
+    
+    setupPlayers(savePath(filename));                              
+  }                
+  
+  boolean setupPlayers(String filename)
+  {
+    File f = new File(filename);
+    if (f.exists())
+    {
+      player = minim.loadFile(filename, 1024);
+      playerMod = minim.loadFile(filename, 1024);
+      //lpf = new LowPassFS(100, in.sampleRate());
+      bde = new BoneConductedEffect(player.bufferSize(), player.sampleRate()); 
+      fft = new FFT(player.bufferSize(), player.sampleRate()); 
+      fftMod = new FFT(playerMod.bufferSize(), playerMod.sampleRate());    
 
-    // fft.logAverages(20,2);
-    // fftMod.logAverages(20,2);  
+      // fft.logAverages(20,2);
+      // fftMod.logAverages(20,2);  
 
-    fft.linAverages(BAND_NUM);
-    fftMod.linAverages(BAND_NUM);
+      fft.linAverages(BAND_NUM);
+      fftMod.linAverages(BAND_NUM);
+      println("Players loaded successfully");
+      return true;      
+    }             
+    else
+    {
+      println("Players not loaded");
+      return false;
+    }
   }
   
   void update()
@@ -71,8 +89,17 @@ class RecordScreen extends Screen
     
     /*for (int i = 0; i<wavethreads.size(); i++){
       wavethreads.get(i).update();
-    } */
-    threads.update(in);
+    } */                   
+    
+    if (player != null && playerMod != null)
+    {
+      threads.update(player, playerMod);
+    }
+    else
+    {
+      threads.update(in, null);
+    }
+    
   } 
   
   void draw(int x, int y)
@@ -136,7 +163,7 @@ class RecordScreen extends Screen
     if ( recorder.isRecording() ) 
     {
       recorder.endRecord();
-      buttonRecord.setLabel("Record");
+      //buttonRecord.setLabel("Record");
       recording = false;
 
       if ( player != null )
@@ -148,14 +175,19 @@ class RecordScreen extends Screen
           playerMod.close();
       }
       player = recorder.save();
-      playerMod = minim.loadFile("ydkm.wav", 1024);
+      println("Recording saved");
+      
+      String filename = savePath(this.username + ".wav");//"ydkm.wav"
+      setupPlayers(filename);
+            
     }
     else 
     {
-      recorder = minim.createRecorder(in, "ydkm.wav", true);
+      recorder = minim.createRecorder(in, this.username + ".wav", true);
       recorder.beginRecord();
-      buttonRecord.setLabel("Stop");
+      //buttonRecord.setLabel("Stop");
       recording = true;
+      println("Recording started");
     }
   }  
   

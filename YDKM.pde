@@ -17,9 +17,8 @@ void setup()
   setting = "";
   
   
-  
   setupControls();
-  recordScreen = new RecordScreen(this, width, height, "leejay");
+  recordScreen = new RecordScreen(this, width, height, "melody");
 }
 
 void update()
@@ -35,9 +34,9 @@ void draw()
   
   
   background(230);
-  /*noStroke();
-  fill(255,50);
-  rect(0,0,width, height); */
+  //noStroke();
+  //fill(230,50);
+  //rect(0,0,width, height); 
   
   //controlP5.draw();
   recordScreen.draw(0,0); 

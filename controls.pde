@@ -18,9 +18,9 @@ void setupControls()
   
   controlP5.setAutoDraw(false);
   controlP5.setColorActive(color(255,50,50));
-  controlP5.setColorBackground(color(200));
+  controlP5.setColorBackground(color(230));
   controlP5.setColorForeground(color(255,180,180));
-  controlP5.setColorLabel(color(30));
+  controlP5.setColorLabel(color(230));
   
   //buttonRecord = controlP5.addToggle("record",20,20,60,18);
   //buttonPlay = controlP5.addToggle("play",20 + 80,20,60,18);
@@ -32,7 +32,7 @@ void setupControls()
   //controlP5.addToggle("muteMod",false,width/2 + 20 + 80,20,18,18);
   
   //sliderLowPassFilter.setLabel("Low Pass Filter");
-  for (int i = 0; i < 7; i++) {
+  for (int i = 0; i < BAND_NUM; i++) {
     controlP5.addSlider("EQ" + i,0,7,1, 20 + 15 * i,400,10,200).setId(100 + i);
   }
 }       
@@ -124,6 +124,10 @@ void keyPressed()
   {
     recordScreen.bde.fromString(setting);
     recordScreen.bde.updateController(controlP5);
+  }
+  else if (key == 'r')
+  {
+    recordScreen.record();
   }
 }
 
