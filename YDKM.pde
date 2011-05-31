@@ -39,7 +39,7 @@ void draw()
   fill(255,50);
   rect(0,0,width, height); */
   
-  controlP5.draw();
+  //controlP5.draw();
   recordScreen.draw(0,0); 
 }
 

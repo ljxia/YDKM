@@ -22,18 +22,18 @@ void setupControls()
   controlP5.setColorForeground(color(255,180,180));
   controlP5.setColorLabel(color(30));
   
-  buttonRecord = controlP5.addToggle("record",20,20,60,18);
-  buttonPlay = controlP5.addToggle("play",20 + 80,20,60,18);
-  buttonPlayModified = controlP5.addToggle("play_modified",20 + width/2,20,60,18);
+  //buttonRecord = controlP5.addToggle("record",20,20,60,18);
+  //buttonPlay = controlP5.addToggle("play",20 + 80,20,60,18);
+  //buttonPlayModified = controlP5.addToggle("play_modified",20 + width/2,20,60,18);
   //sliderLowPassFilter = controlP5.addSlider("lowPassFilterSliderValue",60,2000,1000,500 + width/2,20,100,10); 
   
   
-  controlP5.addToggle("muteNormal",false,20 + 80 + 80,20,18,18);
-  controlP5.addToggle("muteMod",false,width/2 + 20 + 80,20,18,18);
+  //controlP5.addToggle("muteNormal",false,20 + 80 + 80,20,18,18);
+  //controlP5.addToggle("muteMod",false,width/2 + 20 + 80,20,18,18);
   
   //sliderLowPassFilter.setLabel("Low Pass Filter");
-  for (int i = 0; i < BAND_NUM; i++) {
-    controlP5.addSlider("EQ" + i,0,7,1, 20 + i * (width - 40) / BAND_NUM,400,15,200).setId(100 + i);
+  for (int i = 0; i < 7; i++) {
+    controlP5.addSlider("EQ" + i,0,7,1, 20 + 15 * i,400,10,200).setId(100 + i);
   }
 }       
 

@@ -23,7 +23,7 @@ class RecordScreen extends Screen
 
   VerletPhysics2D physics;
   //ArrayList<WaveThread2D> wavethreads;
-  ArrayList<WaveThread2D> corethreads;
+  WaveThreadCollection threads;
   
   RecordScreen(PApplet papplet, int w, int h, String name)
   {
@@ -40,13 +40,7 @@ class RecordScreen extends Screen
     physics.setGravity(new Vec2D(0,0));
     physics.setWorldBounds(new Rect(0,0,width,height));
 
-    //wavethreads = new ArrayList<WaveThread2D>();
-    corethreads = new ArrayList<WaveThread2D>();
-
-    for (int i = 0; i<20; i++){
-      //wavethreads.add(new WaveThread2D(physics, 15, new VerletParticle2D(width/2,height-400), 0.4));  // + (i - 3) * 100  
-      corethreads.add(new WaveThread2D(physics, 20, new VerletParticle2D(width/2,height-400), 0.99));
-    }
+    threads = new WaveThreadCollection(physics, 20, new VerletParticle2D(width * 3/4,height/2), 0.99);
   }
   
   void setupAudio()
@@ -78,15 +72,14 @@ class RecordScreen extends Screen
     /*for (int i = 0; i<wavethreads.size(); i++){
       wavethreads.get(i).update();
     } */
-    for (int i = 0; i<corethreads.size(); i++){
-      corethreads.get(i).shapeInterpolator.set(in.left.level() * 20 + 1);
-      corethreads.get(i).update();
-    }
+    threads.update(in);
   } 
   
   void draw(int x, int y)
   {
-    if (player != null && player.isPlaying())
+    controlP5.draw(); 
+    threads.draw();
+    /*if (player != null && player.isPlaying())
     {
        stroke(30);
        drawAudioSource(player, 20,60, width / 2 - 40, 80);
@@ -114,14 +107,12 @@ class RecordScreen extends Screen
        fill(220,0,0,150); 
 
        drawFFT(fftMod,   20, 260, width - 40, 80);
-    }
+    }*/
 
     /*for (int i = 0; i<wavethreads.size(); i++){
       wavethreads.get(i).draw();
     } */
-    for (int i = 0; i<corethreads.size(); i++){
-      corethreads.get(i).draw();
-    }
+    
   } 
   
   void stop()
