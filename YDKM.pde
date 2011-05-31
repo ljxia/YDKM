@@ -3,7 +3,8 @@ import processing.opengl.*;
 int BAND_NUM = 80;
 String setting;
 
-
+PFont titleFont;
+PFont paragraphFont;
 RecordScreen recordScreen;
 
 void setup()
@@ -15,31 +16,24 @@ void setup()
   frameRate(30); 
   smooth(); 
   setting = "";
-  
-  
+    
   setupControls();
   recordScreen = new RecordScreen(this, width, height, "melody");
+  
+  titleFont = loadFont("HelveticaNeue-Bold-60.vlw");
+  paragraphFont = loadFont("HelveticaNeue-Light-18.vlw");
 }
 
 void update()
 {
-  //println(in.left.level());
-   
   recordScreen.update();
 }            
 
 void draw()
 {
-  update();
-  
-  
+  update();              
   background(230);
-  //noStroke();
-  //fill(230,50);
-  //rect(0,0,width, height); 
-  
-  //controlP5.draw();
-  recordScreen.draw(0,0); 
+  recordScreen.draw(0,0);  
 }
 
 void drawAudioSource(ddf.minim.AudioSource source, int x, int y, int width, int height)

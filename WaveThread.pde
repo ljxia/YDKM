@@ -23,6 +23,7 @@ class WaveThread2D
   int updateInterval = 3;
   
   Integrator shapeInterpolator;
+  int threadColor;
   
   public WaveThread2D(VerletPhysics2D physics, int length, VerletParticle2D origin, float forceScale)
   {
@@ -39,11 +40,11 @@ class WaveThread2D
     
     this.attractor = new VerletParticle2D(this.origin);
     this.comet = new VerletParticle2D(this.origin.add(Vec2D.randomVector().scale(50)));
-    this.physics.addParticle(this.origin);
+    //this.physics.addParticle(this.origin);
     this.physics.addParticle(this.comet);
     this.physics.addParticle(this.attractor);
     
-    this.origin.lock();
+    this.origin.unlock();
     this.attractor.unlock();
     this.comet.unlock();
     
@@ -101,7 +102,9 @@ class WaveThread2D
     
     
     this.rep = 1;//ceil(random(3,7));
-    this.updateInterval = 4; //ceil(random(3,20));
+    this.updateInterval = 4; //ceil(random(3,20)); 
+    
+    this.threadColor = color(187,0,0);
   } 
   
   void update()
@@ -133,7 +136,7 @@ class WaveThread2D
   
   void draw()
   {
-    stroke(170);
+    /*stroke(170);
     noFill();
     //line(origin.x ,origin.y,comet.x ,comet.y);
 
@@ -149,7 +152,7 @@ class WaveThread2D
     //ellipse(comet.x ,comet.y,3,3); 
 
     fill(0,0,255);
-    //ellipse(attractor.x ,attractor.y,3,3);
+    //ellipse(attractor.x ,attractor.y,3,3);    */
 
     pushMatrix();
     translate(origin.x,origin.y);
@@ -183,8 +186,8 @@ class WaveThread2D
       noFill();
       for (int i = 0; i<chain.size(); i++)
       {
-        stroke(255,0,0, 180);
-        /*strokeWeight(1.5f);*/
+        stroke(this.threadColor);
+        strokeWeight(1.5);
         //noStroke();
         curveVertex(chain.get(i).x - origin.x ,chain.get(i).y - origin.y);
       }

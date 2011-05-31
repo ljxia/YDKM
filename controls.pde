@@ -5,11 +5,20 @@ controlP5.Toggle buttonPlay;
 controlP5.Toggle buttonRecord; 
 controlP5.Toggle buttonPlayModified;
 
-Slider sliderLowPassFilter;
 Boolean recording = false;
 Boolean playing = false;
 
 int lowPassFilterSliderValue = 100;
+
+ControllerSprite recordSprite;
+ControllerSprite stopSprite;
+ControllerSprite playSprite;
+ControllerSprite pauseSprite;
+
+controlP5.Button recordButton;
+controlP5.Button playButton; 
+
+ArrayList<Slider> allSliders;
 
 void setupControls()
 {
@@ -17,10 +26,35 @@ void setupControls()
   //controlP5.setAutoInitialization(true);
   
   controlP5.setAutoDraw(false);
-  controlP5.setColorActive(color(255,50,50));
+  controlP5.setColorActive(color(187,0,0));
   controlP5.setColorBackground(color(230));
-  controlP5.setColorForeground(color(255,180,180));
+  controlP5.setColorForeground(color(200,0,0));
   controlP5.setColorLabel(color(230));
+  
+  recordSprite = new ControllerSprite(controlP5,loadImage("button_record.png"),200,60);
+  recordSprite.setMask(loadImage("button_record_mask.png"));
+  recordSprite.enableMask();
+  
+  stopSprite = new ControllerSprite(controlP5,loadImage("button_stop.png"),200,60);
+  stopSprite.setMask(loadImage("button_stop_mask.png"));
+  stopSprite.enableMask(); 
+  
+  playSprite = new ControllerSprite(controlP5,loadImage("button_play.png"),200,60);
+  playSprite.setMask(loadImage("button_play_mask.png"));
+  playSprite.enableMask();
+
+  pauseSprite = new ControllerSprite(controlP5,loadImage("button_pause.png"),200,60);
+  pauseSprite.setMask(loadImage("button_pause_mask.png"));
+  pauseSprite.enableMask();
+    
+  recordButton = controlP5.addButton("record",1000,1020, 520,200,60);
+  recordButton.setSprite(recordSprite);
+  
+  playButton = controlP5.addButton("playpause",2000,1020, 565,200,60);
+  playButton.setSprite(playSprite);
+  
+  
+    
   
   //buttonRecord = controlP5.addToggle("record",20,20,60,18);
   //buttonPlay = controlP5.addToggle("play",20 + 80,20,60,18);
@@ -31,22 +65,59 @@ void setupControls()
   //controlP5.addToggle("muteNormal",false,20 + 80 + 80,20,18,18);
   //controlP5.addToggle("muteMod",false,width/2 + 20 + 80,20,18,18);
   
-  //sliderLowPassFilter.setLabel("Low Pass Filter");
-  for (int i = 0; i < BAND_NUM; i++) {
-    controlP5.addSlider("EQ" + i,0,7,1, 20 + 15 * i,400,10,200).setId(100 + i);
+  //sliderLowPassFilter.setLabel("Low Pass Filter");  
+  
+  allSliders = new ArrayList<Slider>();
+  
+  for (int i = 0; i < BAND_NUM / 4; i++) {
+    Slider slider = controlP5.addSlider("EQ" + i,0.9,7,1, 560 + 20 * i,520,15,100);
+    slider.setId(100 + i);
+    slider.setValueLabel("");
+    slider.setColorValueLabel(color(230));
+    slider.hide();
+    allSliders.add(slider);
   }
 }       
 
 public void record() {
-  recordScreen.record();   
+  recordScreen.record();
+  if (!recording)
+  {
+    recordButton.setSprite(recordSprite);
+  }
+  else
+  {
+    recordButton.setSprite(stopSprite);
+  }   
 }
 
-public void play() {
-  recordScreen.play();
+public void playpause() {
+  recordScreen.toggleAll(); 
+  if (playing)
+  {
+    playButton.setSprite(pauseSprite);
+  }
+  else
+  {
+    playButton.setSprite(playSprite);
+  }                                    
+  
+  for (int i = 0; i<allSliders.size(); i++){
+    if (playing)
+    {
+       allSliders.get(i).show();
+    }
+    else
+    {
+      allSliders.get(i).hide();
+    }
+  }
+  
+  //recordScreen.toggleChannel();
 }  
 
 public void play_modified() {
-  recordScreen.play_modified();
+  //recordScreen.play_modified();
 }  
 
 public void muteNormal()
