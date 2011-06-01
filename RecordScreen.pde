@@ -30,6 +30,8 @@ class RecordScreen extends Screen
   Integrator introOpacity;
   Integrator screenOffset;
   
+  AudioExporter exporter;
+  
   RecordScreen(PApplet papplet, int w, int h, String name)
   {
     super(papplet,w,h); 
@@ -41,6 +43,8 @@ class RecordScreen extends Screen
     
     setupPhysics();
     setupAudio();
+    
+    exporter = null;
   }
   
   void setupPhysics()
@@ -108,13 +112,22 @@ class RecordScreen extends Screen
     introOpacity.update();
     screenOffset.update();       
     
-    if (player != null && playerMod != null && (player.isPlaying() || playerMod.isPlaying()))
+    if (exporter != null && exporter.exporting)
+    {
+      threads.update(exporter.player, null);
+    }
+    else if (player != null && playerMod != null && (player.isPlaying() || playerMod.isPlaying()))
     {
       threads.update(player, playerMod);
     }
     else
     {
       threads.update(in, null);
+    }
+    
+    if (exporter != null)
+    {
+      exporter.update();
     }
     
   } 
@@ -138,7 +151,11 @@ class RecordScreen extends Screen
     fill(120);
     text("You can record a short clip of your voice, be it an excerpt from your favorite novel, or whatever just happens to be on your mind.\n\nAfter you are finished with recording, adjust the audio with the equalizer tool and try to match the recording to the voice as you hear it yourself.\n\nWhen you are all set, you can choose to participate in the online audio gallery of \"You Don't Know Me\" project and upload your recording. It will show up on project website upon approval.", 60, 150, 360, 1000);
     
-    if (player != null && playerMod != null)
+    if (exporter != null && exporter.exporting)
+    {
+      threads.draw(exporter.player, null);
+    }
+    else if (player != null && playerMod != null)
     {
       threads.draw(player, playerMod);
     }
@@ -186,6 +203,13 @@ class RecordScreen extends Screen
     rect(0,0,600, height);
     
     popMatrix();
+    
+    
+    if (exporter != null)
+    {
+      exporter.draw();
+    }
+    
   }
   
   void drawHelp()
@@ -331,13 +355,20 @@ class RecordScreen extends Screen
     if (introOpacity.get() > 127)
     {
       introOpacity.target(0);
-      screenOffset.target(0);
-      
+      screenOffset.target(0);      
     }
     else
     {
       introOpacity.target(255);
       screenOffset.target(- width*2/3 + width/2);
+      
+      exportAugmentedAudio();
     }
+  }
+  
+  void exportAugmentedAudio()
+  {
+    exporter = new AudioExporter(minim, playerMod, bde, this.username + "_aug.wav");
+    exporter.start();
   }
 }
