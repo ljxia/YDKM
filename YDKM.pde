@@ -6,6 +6,9 @@ String setting;
 PFont titleFont;
 PFont paragraphFont;
 PFont detailFont;
+
+
+HomeScreen homeScreen;
 RecordScreen recordScreen;
 
 void setup()
@@ -18,8 +21,11 @@ void setup()
   smooth(); 
   setting = "";
     
-  setupControls();
-  recordScreen = new RecordScreen(this, width, height, "melody");
+  setupControls(); 
+  
+  
+  homeScreen = new HomeScreen(this, width, height);
+  //recordScreen = new RecordScreen(this, width, height, "melody");
   
   titleFont = loadFont("HelveticaNeue-Bold-60.vlw");
   paragraphFont = loadFont("HelveticaNeue-Light-18.vlw");
@@ -28,14 +34,23 @@ void setup()
 
 void update()
 {
-  recordScreen.update();
+  homeScreen.update();
+  if (recordScreen != null)
+  {
+    recordScreen.update();
+  }  
 }            
 
 void draw()
 {
   update();              
   background(230);
-  recordScreen.draw(0,0);  
+  
+  homeScreen.draw(0,0);
+  if (recordScreen != null)
+  {
+    recordScreen.draw(0,0);
+  } 
 }
 
 void drawAudioSource(ddf.minim.AudioSource source, int x, int y, int width, int height)
@@ -79,8 +94,10 @@ void drawFFT(FFT thisfft, int x, int y, int width, int height)
 void stop()
 {
   // always close Minim audio classes when you are done with them
-  recordScreen.stop();
-
+  if (recordScreen != null)
+  {
+    recordScreen.stop();
+  }
   
   super.stop();
 } 

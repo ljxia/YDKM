@@ -1,5 +1,11 @@
 import controlP5.*;
 
+                    
+/*ControlP5 controlHome;
+String textUsername = "";
+Textfield usernameField;        */
+
+
 ControlP5 controlP5;
 controlP5.Toggle buttonPlay;
 controlP5.Toggle buttonRecord; 
@@ -23,7 +29,18 @@ controlP5.Button shareButton;
 ArrayList<Slider> allSliders;
 
 void setupControls()
-{
+{                          
+  /*controlHome = new ControlP5(this);
+  controlHome.setAutoDraw(false);
+  controlHome.setColorActive(color(187,0,0));
+  controlHome.setColorBackground(color(230));
+  controlHome.setColorForeground(color(200,0,0));
+  //controlHome.setColorLabel(color(230));
+  
+  
+  usernameField = controlHome.addTextfield("username",60,700,300,20);
+  usernameField.setFocus(true); */
+  
   controlP5 = new ControlP5(this);
   //controlP5.setAutoInitialization(true);
   
@@ -63,18 +80,6 @@ void setupControls()
   shareButton.setSprite(shareSprite);
   shareButton.hide();
   
-    
-  
-  //buttonRecord = controlP5.addToggle("record",20,20,60,18);
-  //buttonPlay = controlP5.addToggle("play",20 + 80,20,60,18);
-  //buttonPlayModified = controlP5.addToggle("play_modified",20 + width/2,20,60,18);
-  //sliderLowPassFilter = controlP5.addSlider("lowPassFilterSliderValue",60,2000,1000,500 + width/2,20,100,10); 
-  
-  
-  //controlP5.addToggle("muteNormal",false,20 + 80 + 80,20,18,18);
-  //controlP5.addToggle("muteMod",false,width/2 + 20 + 80,20,18,18);
-  
-  //sliderLowPassFilter.setLabel("Low Pass Filter");  
   
   allSliders = new ArrayList<Slider>();
   
@@ -179,46 +184,63 @@ void mouseDragged()
 
 void keyPressed()
 {
-  if (key == ' ')
+  if (homeScreen != null && homeScreen.active)
   {
-    //recordScreen.toggleAll();
+    if (key >= 'A' && key <= 'Z')
+    {
+      key = char(key + 97 - 65);
+    }
+    
+    if ((key >= 'a' && key <= 'z') || (key >= '0' && key <= '9') || key == ' ' || key == '.')
+    {
+      homeScreen.username = homeScreen.username + key;
+    }
+    else if (key == BACKSPACE || key == DELETE)
+    {
+      if (homeScreen.username.length() > 0)
+      {
+         homeScreen.username = homeScreen.username.substring(0, homeScreen.username.length() - 1);
+      }
+    }
+    else if (key == ENTER)
+    {
+      if (homeScreen.username.length() > 0)
+      {
+        homeScreen.dismiss();
+      }
+    }
   }
   
-  else if (key == 't')
+  if (false)
   {
-    recordScreen.toggleChannel();    
+     if (key == ' ')
+    {
+      //recordScreen.toggleAll();
+    }
+
+    else if (key == 't')
+    {
+      recordScreen.toggleChannel();    
+    }
+
+    else if (key == 's')
+    {
+      setting = recordScreen.bde.toString();
+    }
+    else if (key == 'l')
+    {
+      recordScreen.bde.fromString(setting);
+      recordScreen.bde.updateController(controlP5);
+    }
+    else if (key == 'r')
+    {
+      recordScreen.record();
+    }
+    else if (key == 'i')
+    {
+      recordScreen.toggleIntro();
+    }
   }
   
-  else if (key == '[')
-  {
-    /*for (int i = 0; i<wavethreads.size(); i++){
-      wavethreads.get(i).shapeInterpolator.set(wavethreads.get(i).shapeInterpolator.get() *0.5);
-    } */
-  }
-  
-  else if (key == ']')
-  {
-    /*for (int i = 0; i<wavethreads.size(); i++){
-      wavethreads.get(i).shapeInterpolator.set(wavethreads.get(i).shapeInterpolator.get() *2);
-    }*/
-  }
-  
-  else if (key == 's')
-  {
-    setting = recordScreen.bde.toString();
-  }
-  else if (key == 'l')
-  {
-    recordScreen.bde.fromString(setting);
-    recordScreen.bde.updateController(controlP5);
-  }
-  else if (key == 'r')
-  {
-    recordScreen.record();
-  }
-  else if (key == 'i')
-  {
-    recordScreen.toggleIntro();
-  }
 }
 

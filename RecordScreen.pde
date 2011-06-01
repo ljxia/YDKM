@@ -37,8 +37,8 @@ class RecordScreen extends Screen
     super(papplet,w,h); 
     this.username = name;
     
-    helpOpacity = new Integrator(0, 0.2,0.3);
-    introOpacity = new Integrator(0,0.2,0.3);
+    helpOpacity = new Integrator(0,0.2,0.3);
+    introOpacity = new Integrator(255,0.2,0.3);
     screenOffset = new Integrator(0,0.1,0.5);
     
     setupPhysics();
