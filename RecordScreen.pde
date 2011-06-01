@@ -27,6 +27,8 @@ class RecordScreen extends Screen
   
   long lastSwitch = 0; 
   Integrator helpOpacity;
+  Integrator introOpacity;
+  Integrator screenOffset;
   
   RecordScreen(PApplet papplet, int w, int h, String name)
   {
@@ -34,6 +36,8 @@ class RecordScreen extends Screen
     this.username = name;
     
     helpOpacity = new Integrator(0, 0.2,0.3);
+    introOpacity = new Integrator(0,0.2,0.3);
+    screenOffset = new Integrator(0,0.1,0.5);
     
     setupPhysics();
     setupAudio();
@@ -81,7 +85,7 @@ class RecordScreen extends Screen
       fftMod.linAverages(BAND_NUM);
       println("Players loaded successfully"); 
       playButton.show();
-      
+      shareButton.show();
       
       player.printControls();
       return true;      
@@ -100,11 +104,9 @@ class RecordScreen extends Screen
     
     physics.update();
     
-    helpOpacity.update();
-    
-    /*for (int i = 0; i<wavethreads.size(); i++){
-      wavethreads.get(i).update();
-    } */                   
+    helpOpacity.update(); 
+    introOpacity.update();
+    screenOffset.update();       
     
     if (player != null && playerMod != null && (player.isPlaying() || playerMod.isPlaying()))
     {
@@ -119,6 +121,10 @@ class RecordScreen extends Screen
   
   void draw(int x, int y)
   {
+    pushMatrix();
+    translate(x,y);
+    translate(screenOffset.get(),0);
+    
     controlP5.draw();
     
     textFont(titleFont);
@@ -175,41 +181,11 @@ class RecordScreen extends Screen
     
     drawHelp();  
     
-
-    /*if (player != null && player.isPlaying())
-    {
-       stroke(30);
-       drawAudioSource(player, 20,60, width / 2 - 40, 80);
-
-       fft.forward(player.mix);
-
-       noStroke();
-       fill(0,0,220,130); 
-       drawFFT(fft,      20, 260, width - 40, 80);
-    }
-    else
-    {
-       stroke(255,0,0);
-       drawAudioSource(in, 20,60, width / 2 - 40, 80);
-    } 
-
-    if (playerMod != null && playerMod.isPlaying())
-    {
-       stroke(30);
-       drawAudioSource(playerMod, 20 + width/2,60, width / 2 - 40, 80);
-
-       fftMod.forward(playerMod.mix);
-
-       noStroke();
-       fill(220,0,0,150); 
-
-       drawFFT(fftMod,   20, 260, width - 40, 80);
-    }*/
-
-    /*for (int i = 0; i<wavethreads.size(); i++){
-      wavethreads.get(i).draw();
-    } */
+    noStroke();
+    fill(230, introOpacity.get());
+    rect(0,0,600, height);
     
+    popMatrix();
   }
   
   void drawHelp()
@@ -270,47 +246,6 @@ class RecordScreen extends Screen
     }
   }  
   
-  /*void play()
-  {
-    println("Play");
-    if ( player != null )
-    {
-      if (player.isPlaying())
-      {
-         //buttonPlay.setLabel("Play");
-         playing = false; 
-
-         player.pause();
-      }
-      else
-      {
-        //buttonPlay.setLabel("Stop");
-        playing = true;
-        player.loop();
-
-        //player.play();
-      }    
-    }
-  } 
-  
-  void play_modified() {
-    if (playerMod != null)
-    {
-       if (playerMod.isPlaying())
-       {
-         buttonPlayModified.setLabel("Play");
-         playerMod.pause(); 
-       }
-       else
-       {
-          buttonPlayModified.setLabel("Stop");
-          playerMod.pause();
-          playerMod.loop(); 
-          //playerMod.addEffect(lpf);
-          playerMod.addEffect(bde);
-        }
-    }
-  }  */
 
   void muteNormal()
   {
@@ -388,6 +323,21 @@ class RecordScreen extends Screen
           playerMod.unmute();
         }
       }     
+    }
+  }
+
+  void toggleIntro()
+  {
+    if (introOpacity.get() > 127)
+    {
+      introOpacity.target(0);
+      screenOffset.target(0);
+      
+    }
+    else
+    {
+      introOpacity.target(255);
+      screenOffset.target(- width*2/3 + width/2);
     }
   }
 }

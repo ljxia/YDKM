@@ -75,7 +75,7 @@ class BoneConductedEffect implements AudioEffect
   
   void updateController(ControlP5 c)
   {
-    for (int i = 0; i<bandScale.length; i++){
+    for (int i = 0; i<allSliders.size(); i++){
       try
       {
         ((Slider)c.controller("EQ" + i)).setValue(bandScale[i]);

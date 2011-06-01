@@ -14,9 +14,11 @@ ControllerSprite recordSprite;
 ControllerSprite stopSprite;
 ControllerSprite playSprite;
 ControllerSprite pauseSprite;
+ControllerSprite shareSprite;
 
 controlP5.Button recordButton;
-controlP5.Button playButton; 
+controlP5.Button playButton;
+controlP5.Button shareButton; 
 
 ArrayList<Slider> allSliders;
 
@@ -46,13 +48,20 @@ void setupControls()
   pauseSprite = new ControllerSprite(controlP5,loadImage("button_pause.png"),200,60);
   pauseSprite.setMask(loadImage("button_pause_mask.png"));
   pauseSprite.enableMask();
+  
+  shareSprite = new ControllerSprite(controlP5,loadImage("button_share.png"),200,60);
+  shareSprite.setMask(loadImage("button_share_mask.png"));
+  shareSprite.enableMask();
     
-  recordButton = controlP5.addButton("record",1000,60, 540,200,60);    //1020
+  recordButton = controlP5.addButton("record",1000,60, 510,200,60);    //1020
   recordButton.setSprite(recordSprite);
   
-  playButton = controlP5.addButton("playpause",2000,60, 585,200,60);
+  playButton = controlP5.addButton("playpause",2000,60, 565,200,60);
   playButton.setSprite(playSprite);
   
+  shareButton = controlP5.addButton("share",3000,60, 620,200,60);
+  shareButton.setSprite(shareSprite);
+  shareButton.hide();
   
     
   
@@ -96,10 +105,12 @@ public void playpause() {
   if (playing)
   {
     playButton.setSprite(pauseSprite);
+    shareButton.hide();
   }
   else
   {
     playButton.setSprite(playSprite);
+    shareButton.show();
   }                                    
   
   for (int i = 0; i<allSliders.size(); i++){
@@ -114,7 +125,12 @@ public void playpause() {
   }
   
   //recordScreen.toggleChannel();
-}  
+} 
+
+public void share()
+{
+  recordScreen.toggleIntro();
+} 
 
 public void play_modified() {
   //recordScreen.play_modified();
@@ -199,6 +215,10 @@ void keyPressed()
   else if (key == 'r')
   {
     recordScreen.record();
+  }
+  else if (key == 'i')
+  {
+    recordScreen.toggleIntro();
   }
 }
 
