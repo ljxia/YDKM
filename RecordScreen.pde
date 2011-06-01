@@ -25,12 +25,15 @@ class RecordScreen extends Screen
   //ArrayList<WaveThread2D> wavethreads;
   WaveThreadCollection threads;
   
-  long lastSwitch = 0;
+  long lastSwitch = 0; 
+  Integrator helpOpacity;
   
   RecordScreen(PApplet papplet, int w, int h, String name)
   {
     super(papplet,w,h); 
     this.username = name;
+    
+    helpOpacity = new Integrator(0, 0.2,0.3);
     
     setupPhysics();
     setupAudio();
@@ -64,7 +67,10 @@ class RecordScreen extends Screen
       player = minim.loadFile(filename, 1024);
       playerMod = minim.loadFile(filename, 1024);
       //lpf = new LowPassFS(100, in.sampleRate());
-      bde = new BoneConductedEffect(player.bufferSize(), player.sampleRate()); 
+      bde = new BoneConductedEffect(player.bufferSize(), player.sampleRate());
+      bde.fromString("1.2,1.5,3.6,4.2,4.6,5.7,5.5,6.5,6.1,3.7,2.3,2.1,2.1,1.9,1.5");
+      bde.updateController(controlP5);
+       
       fft = new FFT(player.bufferSize(), player.sampleRate()); 
       fftMod = new FFT(playerMod.bufferSize(), playerMod.sampleRate());    
 
@@ -75,6 +81,9 @@ class RecordScreen extends Screen
       fftMod.linAverages(BAND_NUM);
       println("Players loaded successfully"); 
       playButton.show();
+      
+      
+      player.printControls();
       return true;      
     }             
     else
@@ -91,11 +100,13 @@ class RecordScreen extends Screen
     
     physics.update();
     
+    helpOpacity.update();
+    
     /*for (int i = 0; i<wavethreads.size(); i++){
       wavethreads.get(i).update();
     } */                   
     
-    if (player != null && playerMod != null)
+    if (player != null && playerMod != null && (player.isPlaying() || playerMod.isPlaying()))
     {
       threads.update(player, playerMod);
     }
@@ -119,7 +130,7 @@ class RecordScreen extends Screen
     textFont(paragraphFont);
     textSize(18);
     fill(120);
-    text("You can record a short clip of your voice, be it an excerpt from your favorite novel, or whatever just happens to be on your mind.\n\nAfter you are finished with recording, adjust the audio with the equalizer tool and try to match the recording to the voice as you hear it yourself.\n\nWhen you are all set, you can choose to participate in the online audio gallery of \"You Don't Know Me\" project and upload your recording. It will show up on project website upoon approval.", 60, 150, 360, 1000);
+    text("You can record a short clip of your voice, be it an excerpt from your favorite novel, or whatever just happens to be on your mind.\n\nAfter you are finished with recording, adjust the audio with the equalizer tool and try to match the recording to the voice as you hear it yourself.\n\nWhen you are all set, you can choose to participate in the online audio gallery of \"You Don't Know Me\" project and upload your recording. It will show up on project website upon approval.", 60, 150, 360, 1000);
     
     if (player != null && playerMod != null)
     {
@@ -132,22 +143,20 @@ class RecordScreen extends Screen
     
     if (player != null && playerMod != null)
     {
-      textFont(paragraphFont);
-      textSize(12);
+      textFont(titleFont);
+      textSize(24);
       if (player.isPlaying() && playerMod.isPlaying())
       {
-        
-
         
         if (playerMod.isMuted() && !player.isMuted())
         {
           fill(187,0,0);
-          text("PLAYING ORIGINAL", 1030, 640);
+          text("ORIGINAL", 990, 640);
         }
         else if (!playerMod.isMuted() && player.isMuted())
         {
           fill(0,153,255);
-          text("PLAYING AUGMENTED", 1030, 640);
+          text("AUGMENTED", 990, 640);
         } 
         
         /*noFill();
@@ -155,14 +164,16 @@ class RecordScreen extends Screen
         
         if (mousePressed && millis() - lastSwitch > 400)
         {
-          if (mouseX >= 1030 && mouseX < 1200 && mouseY >= 625 && mouseY <= 640)
+          if (mouseX >= 990 && mouseX < 1160 && mouseY >= 625 && mouseY <= 640)
           {
             this.toggleChannel(); 
             lastSwitch = millis();
           }
         }
       }
-    }  
+    }
+    
+    drawHelp();  
     
 
     /*if (player != null && player.isPlaying())
@@ -199,6 +210,15 @@ class RecordScreen extends Screen
       wavethreads.get(i).draw();
     } */
     
+  }
+  
+  void drawHelp()
+  {
+    fill(160,helpOpacity.get()); 
+    textFont(detailFont);
+    textSize(10);
+    text("USE EQUALIZER TO AUGMENT AUDIO", 560, 660);
+    text("TOGGLE PLAYBACK AUDIO SOURCE", 990, 660);
   } 
   
   void stop()
@@ -331,14 +351,17 @@ class RecordScreen extends Screen
         player.pause();
         playerMod.pause();
         playing = false;
+        helpOpacity.target(0);
       }
       else
       {
         player.loop();
-        playerMod.loop();
+        playerMod.loop(); 
+        playerMod.clearEffects();
         playerMod.addEffect(bde);
         playing = true;
-        playerMod.mute();
+        player.mute();
+        helpOpacity.target(255);
       }     
     }
   }

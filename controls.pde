@@ -47,10 +47,10 @@ void setupControls()
   pauseSprite.setMask(loadImage("button_pause_mask.png"));
   pauseSprite.enableMask();
     
-  recordButton = controlP5.addButton("record",1000,1020, 520,200,60);
+  recordButton = controlP5.addButton("record",1000,60, 540,200,60);    //1020
   recordButton.setSprite(recordSprite);
   
-  playButton = controlP5.addButton("playpause",2000,1020, 565,200,60);
+  playButton = controlP5.addButton("playpause",2000,60, 585,200,60);
   playButton.setSprite(playSprite);
   
   
@@ -70,7 +70,7 @@ void setupControls()
   allSliders = new ArrayList<Slider>();
   
   for (int i = 0; i < BAND_NUM / 4; i++) {
-    Slider slider = controlP5.addSlider("EQ" + i,0.9,7,1, 560 + 20 * i,520,15,100);
+    Slider slider = controlP5.addSlider("EQ" + i,0.95,7,1, 560 + 20 * i,539,15,100);
     slider.setId(100 + i);
     slider.setValueLabel("");
     slider.setColorValueLabel(color(230));
@@ -165,7 +165,7 @@ void keyPressed()
 {
   if (key == ' ')
   {
-    recordScreen.toggleAll();
+    //recordScreen.toggleAll();
   }
   
   else if (key == 't')

@@ -64,18 +64,26 @@ class BoneConductedEffect implements AudioEffect
   void fromString(String data)
   {
     String []pieces = split(data, ",");
-    if (pieces.length >= bandScale.length)
+    if (pieces.length <= bandScale.length)
     {
       for (int i = 0; i<pieces.length; i++){
         bandScale[i] = float(pieces[i]);
       }
     }
+    
   }
   
   void updateController(ControlP5 c)
   {
     for (int i = 0; i<bandScale.length; i++){
-      c.controller("EQ" + i).setValue(bandScale[i]);
+      try
+      {
+        ((Slider)c.controller("EQ" + i)).setValue(bandScale[i]);
+      } 
+      catch (Exception e)
+      {
+        return;
+      }
     }    
   }
 }

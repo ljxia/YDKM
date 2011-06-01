@@ -32,7 +32,7 @@ class WaveThread2D
     this.origin = origin;
     this.forceScale = forceScale;
     
-    this.shapeInterpolator = new Integrator(1,0.3,0.2);
+    this.shapeInterpolator = new Integrator(1,0.6,0.3);
      
     this.chain = new ArrayList<VerletParticle2D>();
     this.springs = new ArrayList<VerletSpring2D>();

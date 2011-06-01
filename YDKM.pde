@@ -5,6 +5,7 @@ String setting;
 
 PFont titleFont;
 PFont paragraphFont;
+PFont detailFont;
 RecordScreen recordScreen;
 
 void setup()
@@ -22,6 +23,7 @@ void setup()
   
   titleFont = loadFont("HelveticaNeue-Bold-60.vlw");
   paragraphFont = loadFont("HelveticaNeue-Light-18.vlw");
+  detailFont = loadFont("HelveticaNeue-UltraLight-12.vlw");
 }
 
 void update()

@@ -46,7 +46,7 @@ class WaveThreadCollection
     if (src1 != null)
     {
       for (int i = 0; i<originalthreads.size(); i++){
-        originalthreads.get(i).shapeInterpolator.set(src1.left.level() * 40 + 0.9);
+        originalthreads.get(i).shapeInterpolator.target(src1.left.level() * 30 + 0.9);
         originalthreads.get(i).update();
       }      
     }
@@ -55,14 +55,14 @@ class WaveThreadCollection
     if (src2 != null)
     {
       for (int i = 0; i<augmentedthreads.size(); i++){
-        augmentedthreads.get(i).shapeInterpolator.set(src2.left.level() * 40 + 0.9);
+        augmentedthreads.get(i).shapeInterpolator.target(src2.left.level() * 30 + 0.9);
         augmentedthreads.get(i).update();
       }
     }
     else if (src1 != null)
     {
       for (int i = 0; i<augmentedthreads.size(); i++){
-        augmentedthreads.get(i).shapeInterpolator.set(src1.left.level() * 40 + 0.9);
+        augmentedthreads.get(i).shapeInterpolator.target(src1.left.level() * 30 + 0.9);
         augmentedthreads.get(i).update();
       }
     }

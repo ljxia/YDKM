@@ -13,4 +13,5 @@ build/*
 
 *.mp3
 
-compiled/*
+compiled/*         
+application*/*
