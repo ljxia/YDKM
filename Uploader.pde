@@ -50,7 +50,7 @@ class Uploader extends Thread
       String upload_url = query[0];
       println(upload_url);
       
-      this.audioExporter.progress = 30;
+      this.audioExporter.progress = 10;
       this.audioExporter.message = "UPLOADING FILES";
       
       HttpClient httpclient = new DefaultHttpClient();
@@ -86,7 +86,8 @@ class Uploader extends Thread
             if (query.length > 0)
             {                   
               println("=============================");
-              println(query[0]);
+              println(query[0]); 
+              this.audioExporter.submissionHandle = query[0];
             }
           }          
         }

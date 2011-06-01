@@ -15,6 +15,7 @@ class AudioExporter
   
   String message = "";
   float progress;
+  String submissionHandle = "";
   
   AudioExporter(Minim minim, AudioPlayer exportPlayer, BoneConductedEffect bce, String filename)
   {
@@ -77,9 +78,9 @@ class AudioExporter
        }
        else if (uploading)
        {
-         if (progress > 10 && progress < 95)
+         if (progress >= 10 && progress < 95)
          {
-           if (frameCount % 3 == 0)
+           if (frameCount % 5 == 0)
            {
              progress += 1;
            }
@@ -111,6 +112,40 @@ class AudioExporter
       text(message, 300, height - 180);
     }
     
+    if (startTime > 0 && finished)
+    {
+      if (!submissionHandle.equals(""))
+      {
+        String url = "http://darkudon.appspot.com/submission/" + submissionHandle + ".html";
+        startTime = 0;
+        finished = true;
+        link(url);
+      }
+      
+    } 
+    else if (startTime <= 0 && finished)
+    {
+      if (!submissionHandle.equals(""))
+      {
+        fill(187,0,0);
+        textFont(titleFont);
+        textSize(50);
+        textAlign(CENTER);
+
+        text("THANK YOU FOR PARTICIPATING", width/2, height - 180);
+
+        
+        
+        //open browser window 
+        textFont(paragraphFont);
+        textSize(18);
+        fill(160);
+        
+        text("Your submission will open in a new browser window.", width/2, height - 135);
+        
+        textAlign(LEFT);
+      }
+    }
 
     
   }
