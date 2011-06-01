@@ -369,6 +369,7 @@ class RecordScreen extends Screen
   void exportAugmentedAudio()
   {
     exporter = new AudioExporter(minim, playerMod, bde, this.username + "_aug.wav");
+    exporter.uploader = new Uploader(exporter, this.username, savePath(this.username + ".wav"), savePath(this.username + "_aug.wav"));
     exporter.start();
   }
 }

@@ -11,6 +11,11 @@ class AudioExporter
   boolean uploading;
   boolean finished; 
   
+  Uploader uploader; 
+  
+  String message = "";
+  float progress;
+  
   AudioExporter(Minim minim, AudioPlayer exportPlayer, BoneConductedEffect bce, String filename)
   {
     this.minim = minim;
@@ -20,7 +25,9 @@ class AudioExporter
     this.startTime = 0; 
     this.filename = filename;
     this.exporting = false;
-    this.uploading = false;
+    this.uploading = false; 
+    
+    this.uploader = null;
   }
   
   void start()
@@ -42,6 +49,9 @@ class AudioExporter
       finished = false;
       this.exporting = true;
       this.uploading = false;
+      
+      progress = 0;
+      message = "";
     }
   }
   
@@ -56,19 +66,34 @@ class AudioExporter
             recorder.endRecord();
             recorder.save();
             exporting = false;
-            finished = true;
+            uploading = true;
+            finished = false;
+            
+            if (this.uploader != null)
+            {
+              this.uploader.start();
+            }
+         }
+       }
+       else if (uploading)
+       {
+         if (progress > 10 && progress < 95)
+         {
+           if (frameCount % 3 == 0)
+           {
+             progress += 1;
+           }
          }
        }
     }
   }
   
   void draw()
-  {
-    float progress = 0;
-    
+  { 
     if (exporting)
     {
-       progress = map(player.position(),0,player.length(), 0, width - 600);
+       progress = map(player.position(),0,player.length(), 0, 100);
+       message = "PROCESSING FILES";
     }
     
     
@@ -79,9 +104,14 @@ class AudioExporter
       rect(300, height - 200, width - 600, 3);
 
       fill(187,0,0);
-      rect(300, height - 200, progress, 3);
+      rect(300, height - 200, map(progress,0,100,0,width - 600), 3); 
+      
+      textFont(detailFont);
+      textSize(10);
+      text(message, 300, height - 180);
     }
     
+
     
   }
 }
