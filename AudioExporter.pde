@@ -116,7 +116,7 @@ class AudioExporter
     {
       if (!submissionHandle.equals(""))
       {
-        String url = "http://darkudon.appspot.com/submission/" + submissionHandle + ".html";
+        String url = "http://turbulence.org/Works/youdontknowme/submission.php?k=" + submissionHandle;
         startTime = 0;
         finished = true;
         link(url);
