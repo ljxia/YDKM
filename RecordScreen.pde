@@ -76,7 +76,17 @@ class RecordScreen extends Screen
       playerMod = minim.loadFile(filename, 1024);
       //lpf = new LowPassFS(100, in.sampleRate());
       bde = new BoneConductedEffect(player.bufferSize(), player.sampleRate());
-      bde.fromString("1.2,1.5,3.6,4.2,4.6,5.7,5.5,6.5,6.1,3.7,2.3,2.1,2.1,1.9,1.5");
+      
+      String []config = loadStrings(savePath(this.username + "_freq.config"));
+      if (config.length > 0)
+      {
+        bde.fromString(config[0]);
+      }                           
+      else
+      {
+        bde.fromString("1.2,1.5,3.6,4.2,4.6,5.7,5.5,6.5,6.1,3.7,2.3,2.1,2.1,1.9,1.5");
+      }
+     
       bde.updateController(controlP5);
        
       fft = new FFT(player.bufferSize(), player.sampleRate()); 
@@ -368,8 +378,15 @@ class RecordScreen extends Screen
   
   void exportAugmentedAudio()
   {
+    String configString = bde.toString();
+    
+    PrintWriter output = createWriter(this.username + "_freq.config");
+    output.println(configString); 
+    output.flush();
+    output.close();
+    
     exporter = new AudioExporter(minim, playerMod, bde, this.username + "_aug.wav");
-    exporter.uploader = new Uploader(exporter, this.username, savePath(this.username + ".wav"), savePath(this.username + "_aug.wav"));
+    exporter.uploader = new Uploader(exporter, this.username, savePath(this.username + ".wav"), savePath(this.username + "_aug.wav"), configString);
     exporter.start();
   }
 }

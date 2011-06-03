@@ -5,14 +5,16 @@ class Uploader extends Thread
   String fileAugmented;
   String token_url;
   String hostname;
+  String configuration;
   AudioExporter audioExporter;
   
-  public Uploader(AudioExporter exporter, String username, String fileoriginal, String fileaugmented)
+  public Uploader(AudioExporter exporter, String username, String fileoriginal, String fileaugmented, String config)
   {
     this.audioExporter = exporter;
     this.userName = username;
     this.fileOriginal = fileoriginal;
     this.fileAugmented = fileaugmented;
+    this.configuration = config;
     
     this.hostname = "http://darkudon.appspot.com/";
     this.token_url = "ydkm.token"; 
@@ -64,6 +66,7 @@ class Uploader extends Thread
         reqEntity.addPart("username", new StringBody(this.userName));
         reqEntity.addPart("fileOriginal", originalFileBody);
         reqEntity.addPart("fileAugmented", augmentedFileBody);
+        reqEntity.addPart("configuration", new StringBody(this.configuration));
 
         httppost.setEntity(reqEntity);
 
