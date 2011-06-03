@@ -13,6 +13,9 @@ build/*
 
 *.mp3
 
+*.config
+
 compiled/*         
 application*/*
 ydkm*
+
