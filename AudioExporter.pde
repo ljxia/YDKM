@@ -141,7 +141,7 @@ class AudioExporter
         textSize(18);
         fill(160);
         
-        text("Your submission will open in a new browser window. You can now close the app.", width/2, height - 135);
+        text("Your submission will open in a new browser window. You can now close the app. \nFor more information, visit http://http://turbulence.org/Works/youdontknowme/", width/2, height - 135);
         
         textAlign(LEFT);
       }

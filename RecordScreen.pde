@@ -380,18 +380,23 @@ class RecordScreen extends Screen
 
   void toggleIntro()
   {
-    if (introOpacity.get() > 127)
+    if (this.active)
     {
-      introOpacity.target(0);
-      screenOffset.target(0);      
+      if (introOpacity.get() > 250)
+      {
+        introOpacity.target(0);
+        screenOffset.target(0);      
+      }
+      else
+      {
+        introOpacity.target(255);
+        screenOffset.target(- width*2/3 + width/2);
+
+        this.active = false;
+        exportAugmentedAudio();
+      }      
     }
-    else
-    {
-      introOpacity.target(255);
-      screenOffset.target(- width*2/3 + width/2);
-      
-      exportAugmentedAudio();
-    }
+
   }
   
   void exportAugmentedAudio()
@@ -408,6 +413,8 @@ class RecordScreen extends Screen
     exporter.uploader = new Uploader(exporter, this.username, savePath(this.username + ".wav"), savePath(this.username + "_aug.wav"), configString);
     exporter.start();
     
-    this.active = false;
+    shareButton.hide();
+    recordButton.hide();
+    playButton.hide();
   }
 }
