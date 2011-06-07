@@ -10,6 +10,7 @@ PFont detailFont;
 
 HomeScreen homeScreen;
 RecordScreen recordScreen;
+HelpScreen helpScreen;
 
 void setup()
 {
@@ -25,6 +26,8 @@ void setup()
   
   
   homeScreen = new HomeScreen(this, width, height);
+  helpScreen = new HelpScreen(this, width, height);
+  
   //recordScreen = new RecordScreen(this, width, height, "melody");
   
   titleFont = loadFont("HelveticaNeue-Bold-60.vlw");
@@ -38,7 +41,8 @@ void update()
   if (recordScreen != null)
   {
     recordScreen.update();
-  }  
+  }
+  helpScreen.update();  
 }            
 
 void draw()
@@ -50,7 +54,8 @@ void draw()
   if (recordScreen != null)
   {
     recordScreen.draw(0,0);
-  } 
+  }
+  helpScreen.draw(0,0); 
 }
 
 void drawAudioSource(ddf.minim.AudioSource source, int x, int y, int width, int height)

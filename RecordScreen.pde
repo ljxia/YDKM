@@ -30,7 +30,8 @@ class RecordScreen extends Screen
   Integrator introOpacity;
   Integrator screenOffset;
   
-  AudioExporter exporter;
+  AudioExporter exporter;     
+  boolean active;
   
   RecordScreen(PApplet papplet, int w, int h, String name)
   {
@@ -44,7 +45,8 @@ class RecordScreen extends Screen
     setupPhysics();
     setupAudio();
     
-    exporter = null;
+    exporter = null;  
+    this.active = false;
   }
   
   void setupPhysics()
@@ -236,8 +238,9 @@ class RecordScreen extends Screen
     fill(160,helpOpacity.get()); 
     textFont(detailFont);
     textSize(10);
-    text("USE EQUALIZER TO AUGMENT AUDIO", 560, 660);
-    text("TOGGLE PLAYBACK AUDIO SOURCE", 990, 660);
+    text("FREQUENCY: LOW", 560, 660);
+    text("HIGH", 930, 660);
+    text("NOW PLAYING", 990, 660);
   } 
   
   void stop()
@@ -340,6 +343,12 @@ class RecordScreen extends Screen
         playing = true;
         player.mute();
         helpOpacity.target(255);
+
+        if (!helpScreen.shown)
+        {
+          helpScreen.activate();
+        }
+
       }     
     }
   }
@@ -398,5 +407,7 @@ class RecordScreen extends Screen
     exporter = new AudioExporter(minim, playerMod, bde, this.username + "_aug.wav");
     exporter.uploader = new Uploader(exporter, this.username, savePath(this.username + ".wav"), savePath(this.username + "_aug.wav"), configString);
     exporter.start();
+    
+    this.active = false;
   }
 }

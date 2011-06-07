@@ -114,11 +114,13 @@ public void playpause() {
   if (playing)
   {
     playButton.setSprite(pauseSprite);
+    recordButton.hide();
     shareButton.hide();
   }
   else
   {
     playButton.setSprite(playSprite);
+    recordButton.show();
     shareButton.show();
   }                                    
   
@@ -184,6 +186,14 @@ void mouseDragged()
     wavethreads.get(0).origin.set(new Vec2D(mouseX, mouseY));
     
   }*/
+}  
+
+void mousePressed()
+{
+  if (helpScreen.active)
+  {
+    helpScreen.dismiss();
+  }
 }
 
 void keyPressed()
@@ -212,6 +222,25 @@ void keyPressed()
       {
         homeScreen.dismiss();
       }
+    }
+  }
+  else if (recordScreen != null && recordScreen.active)
+  {                                                   
+    if (key == ' ')
+    {
+       playpause();
+    }
+    if (key == 'h' || key == 'H')
+    {
+      if (helpScreen.active)
+      {
+        helpScreen.dismiss();
+      }
+      else
+      {
+        helpScreen.activate();
+      }
+      
     }
   }
   
@@ -243,7 +272,10 @@ void keyPressed()
     else if (key == 'i')
     {
       recordScreen.toggleIntro();
-    }
+    } 
+    
+                       
+    
   }
   
 }

@@ -61,10 +61,14 @@ class HomeScreen extends Screen
   {
     this.active = false;
     recordScreen = new RecordScreen(this.applet, width, height, this.username);
+    recordScreen.active = true;
+    
     recordScreen.screenOffset.set(600);
     recordScreen.screenOffset.target(0);
     recordScreen.introOpacity.target(0);
     
+    
     screenOffset.target(-width);
+    
   }
 }
