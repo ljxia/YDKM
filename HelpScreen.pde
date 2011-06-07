@@ -50,7 +50,7 @@ class HelpScreen extends Screen
 
       textFont(paragraphFont);
       textSize(15);
-      text("Each slider below represents a frequency segment of your recording, the low frequency on the left. You can change the value to amplify a certain frequency to match the output to the voice of yourself. \n\nIt it possible that you will hear noise when certain low frequency ranges are amplified, please ignore only focus on the voice itself.", 560, 400, 400, 500); 
+      text("Each slider below represents a frequency segment of your recording, the low frequency on the left. You can change the value to amplify a certain frequency to match the output to the voice of yourself. \n\nIt is possible that you will hear noise when certain low frequency ranges are amplified, please ignore only focus on the voice itself.", 560, 400, 400, 500); 
       text("You can click on the audio source name below to toggle the playback between the original recording and the augmented output. ", 990, 400, 250, 500);
 
       textFont(detailFont);
