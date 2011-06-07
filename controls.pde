@@ -98,10 +98,14 @@ public void record() {
   if (!recording)
   {
     recordButton.setSprite(recordSprite);
+    playButton.show();
+    shareButton.show();
   }
   else
   {
     recordButton.setSprite(stopSprite);
+    playButton.hide();
+    shareButton.hide();
   }   
 }
 
