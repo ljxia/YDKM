@@ -54,16 +54,20 @@ class BoneConductedEffect implements AudioEffect
     for (int i = 0; i<bandScale.length; i++){
       if (i > 0)
       {
-        output += ",";
+        output += "|";
       }               
-      output += nf(bandScale[i],1,4);
+      output += nf(bandScale[i],1,4).replace(',','.');
     }
     return output;
   } 
   
   void fromString(String data)
   {
-    String []pieces = split(data, ",");
+    String []pieces = split(data, "|");
+    if (pieces.length == 1)
+    {
+      pieces = split(data, ",");
+    }
     if (pieces.length <= bandScale.length)
     {
       for (int i = 0; i<pieces.length; i++){
