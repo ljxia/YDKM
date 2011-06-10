@@ -7,6 +7,7 @@ PFont titleFont;
 PFont paragraphFont;
 PFont detailFont;
 
+String VERSION = "1.0.6";
 
 HomeScreen homeScreen;
 RecordScreen recordScreen;
