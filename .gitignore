@@ -18,4 +18,4 @@ build/*
 compiled/*         
 application*/*
 ydkm*
-
+applet/*
